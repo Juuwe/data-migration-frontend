@@ -1,45 +1,77 @@
 import { useEffect, useState, type FC } from 'react'
-import { Spinner } from 'react-bootstrap'
-import { useNavigate, useParams } from 'react-router-dom'
-import { FeedItem } from '../../components/FeedItem/FeedItem'
+import { Link, useSearchParams } from 'react-router-dom'
 import { getFeedMethod } from '../../modules/methodsApi'
-import type { FeedResponse } from '../../modules/types'
+import { DEFAULT_VIDEO } from '../../modules/media'
+import type { FeedMethod } from '../../modules/types'
 import { ROUTES } from '../../Routes'
 import './FeedPage.css'
 
-interface FeedState {
-  id?: string
-  response: FeedResponse | null
-}
-
 export const FeedPage: FC = () => {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [feed, setFeed] = useState<FeedState>()
+  const [searchParams] = useSearchParams()
+  const id = searchParams.get('id')
+  const next = searchParams.get('next') === 'true'
+  const [method, setMethod] = useState<FeedMethod | null>(null)
 
   useEffect(() => {
-    getFeedMethod(id ? Number(id) : undefined).then((response) => setFeed({ id, response }))
-  }, [id])
+    getFeedMethod(id, next).then((response) => setMethod(response?.method ?? null))
+  }, [id, next])
 
-  const handleNext = (currentId: number) => {
-    getFeedMethod(currentId, true).then((response) => {
-      if (response) navigate(`${ROUTES.FEED}/${response.method.id}`)
-    })
-  }
+  if (!method) return null
 
-  // Пока данные для текущего id не пришли, показываем загрузку
-  if (!feed || feed.id !== id) {
-    return (
-      <div className="feed-message">
-        <Spinner animation="border" variant="light" />
+  return (
+    <>
+      <div className="media-container">
+        <video
+          className="feed-video"
+          src={method.video_url || DEFAULT_VIDEO}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
       </div>
-    )
-  }
 
-  if (!feed.response) {
-    return <p className="feed-message">Услуга не найдена</p>
-  }
+      <div className="content-bottom-group">
+        <section className="info-block">
+          <h2 className="info-title">{method.title}</h2>
+          <details className="expandable-text">
+            <summary className="text-preview">
+              {method.description}
+              <span className="more-btn">больше</span>
+            </summary>
+            <div className="full-text">{method.description}</div>
+          </details>
+        </section>
+      </div>
 
-  const { method } = feed.response
-  return <FeedItem key={method.id} method={method} onNext={() => handleNext(method.id)} />
+      <div className="action-buttons-group">
+        <div className="action-item">
+          <div className="circle-btn" aria-label="Нравится">
+            <i className="bi bi-heart-fill action-icon"></i>
+          </div>
+          <span className="action-label">{method.likes_count}</span>
+        </div>
+
+        <div className="action-item">
+          <Link to={`${ROUTES.FEED}?id=${method.id}&next=true`} className="circle-btn" aria-label="Дальше">
+            <i className="bi bi-arrow-down action-icon"></i>
+          </Link>
+          <span className="action-label">Дальше</span>
+        </div>
+
+        <div className="tags-group">
+          <div className="tag-badge">
+            <i className="bi bi-clock tag-icon" aria-hidden="true"></i>
+            <span className="visually-hidden">Время на гигабайт: </span>
+            <span className="tag-text">{method.time_in_gb?.toFixed(2)} сек/Гб</span>
+          </div>
+          <div className="tag-badge" title="Коэффициент надёжности">
+            <i className="bi bi-shield-check tag-icon" aria-hidden="true"></i>
+            <span className="visually-hidden">Коэффициент надёжности: </span>
+            <span className="tag-text">{method.reliability?.toFixed(3)}</span>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }

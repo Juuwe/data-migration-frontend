@@ -1,14 +1,11 @@
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME, METHODS_MOCK } from './mock'
 import type { FeedResponse, GridResponse } from './types'
 
-// Пока функции работают только с mock-коллекцией, но повторяют поведение
-// GET /api/methods и GET /api/methods/feed, чтобы потом заменить их на запросы
+// Пока функции работают с mock-коллекцией и повторяют поведение
+// GET /api/methods и GET /api/methods/feed
 
-export const getMethods = async (minTime?: number, maxTime?: number): Promise<GridResponse> => {
-  const isValid =
-    minTime !== undefined && maxTime !== undefined && minTime >= 0 && maxTime >= minTime
-
-  if (!isValid) {
+export const getMethods = async (minTime: number, maxTime: number): Promise<GridResponse> => {
+  if (Number.isNaN(minTime) || Number.isNaN(maxTime) || minTime < 0 || maxTime < minTime) {
     return { methods: METHODS_MOCK, min_time: DEFAULT_MIN_TIME, max_time: DEFAULT_MAX_TIME }
   }
 
@@ -19,20 +16,25 @@ export const getMethods = async (minTime?: number, maxTime?: number): Promise<Gr
   return { methods, min_time: minTime, max_time: maxTime }
 }
 
-// Без id — первый метод, с id — метод по id, с next — следующий после него (после последнего — первый)
-export const getFeedMethod = async (id?: number, next = false): Promise<FeedResponse | null> => {
-  if (!METHODS_MOCK.length) return null
-
+// null вместо ответов 400 и 404
+export const getFeedMethod = async (id: string | null, next: boolean): Promise<FeedResponse | null> => {
   let method = METHODS_MOCK[0]
-  if (id !== undefined) {
+
+  if (id === null) {
+    if (next) return null
+  } else {
+    const methodId = Number(id)
+    if (!Number.isInteger(methodId) || methodId <= 0) return null
+
     if (next) {
-      method = METHODS_MOCK.find((item) => item.id > id) ?? METHODS_MOCK[0]
+      method = METHODS_MOCK.find((item) => item.id > methodId) ?? METHODS_MOCK[0]
     } else {
-      const found = METHODS_MOCK.find((item) => item.id === id)
+      const found = METHODS_MOCK.find((item) => item.id === methodId)
       if (!found) return null
       method = found
     }
   }
 
+  if (!method) return null
   return { method: { ...method, is_liked: false } }
 }

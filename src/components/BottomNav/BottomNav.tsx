@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { ROUTES, ROUTE_LABELS, type RouteKeyType } from '../../Routes'
 import './BottomNav.css'
 
@@ -9,7 +9,6 @@ interface NavItem {
   disabled?: boolean
 }
 
-// Добавление и вход станут доступны после авторизации
 const NAV_ITEMS: NavItem[] = [
   { key: 'FEED', icon: 'bi-play-btn' },
   { key: 'ADD', icon: 'bi-plus-square', disabled: true },
@@ -17,27 +16,20 @@ const NAV_ITEMS: NavItem[] = [
   { key: 'LOGIN', icon: 'bi-box-arrow-in-right', disabled: true },
 ]
 
-export const BottomNav: FC = () => {
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  return (
-    <nav className="bottom-nav">
-      {NAV_ITEMS.map(({ key, icon, disabled }) => {
-        const isActive = location.pathname.startsWith(ROUTES[key])
-        return (
-          <button
-            key={key}
-            type="button"
-            className={`nav-item ${isActive ? 'active' : ''}`}
-            disabled={disabled}
-            onClick={() => navigate(ROUTES[key])}
-          >
-            <i className={`bi ${icon} nav-icon`}></i>
-            <span className="nav-label">{ROUTE_LABELS[key]}</span>
-          </button>
-        )
-      })}
-    </nav>
-  )
-}
+export const BottomNav: FC = () => (
+  <nav className="bottom-nav">
+    {NAV_ITEMS.map(({ key, icon, disabled }) =>
+      disabled ? (
+        <span key={key} className="nav-item disabled" aria-disabled="true">
+          <i className={`bi ${icon} nav-icon`}></i>
+          <span className="nav-label">{ROUTE_LABELS[key]}</span>
+        </span>
+      ) : (
+        <NavLink key={key} to={ROUTES[key]} className="nav-item">
+          <i className={`bi ${icon} nav-icon`}></i>
+          <span className="nav-label">{ROUTE_LABELS[key]}</span>
+        </NavLink>
+      ),
+    )}
+  </nav>
+)

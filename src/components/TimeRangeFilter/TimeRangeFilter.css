@@ -1,8 +1,9 @@
+/* --- Слайдер фильтра и Кнопка Найти --- */
 .filter-section {
   position: absolute;
   top: 21px;
   left: 16px;
-  right: 16px;
+  width: 398px;
   z-index: 4;
 }
 
@@ -27,12 +28,13 @@
 
 .range-slider-container {
   position: relative;
-  width: 100%;
+  width: 398px;
   height: 35px;
   background: #f1f2f2;
   border-radius: 12px;
   display: flex;
   align-items: center;
+  padding: 0 12px;
   overflow: hidden;
 }
 
@@ -88,18 +90,26 @@
   box-shadow: 0 0 0 1px #ffffff;
 }
 
-.filter-section .search-btn {
-  width: 100%;
+.search-btn {
+  position: absolute;
+  top: 88px;
+  left: 16px;
+  width: 398px;
   height: 30px;
-  margin-top: 12px;
-  padding: 0;
   background: #2a9fff;
   border: none;
   border-radius: 8px;
+  color: #ffffff;
   font-size: 14px;
   font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s ease;
+  z-index: 4;
 }
 
-.filter-section .search-btn:hover {
+.search-btn:hover {
   background: #1a7cd8;
 }

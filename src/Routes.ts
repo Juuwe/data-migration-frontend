@@ -1,7 +1,7 @@
 export const ROUTES = {
   FEED: '/feed',
   ADD: '/add',
-  GRID: '/methods',
+  GRID: '/grid',
   LOGIN: '/login',
 }
 export type RouteKeyType = keyof typeof ROUTES

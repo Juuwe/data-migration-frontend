@@ -1,9 +1,205 @@
-.feed-message {
+/* --- Видео-плейер ленты (Без системного UI) --- */
+.media-container {
   position: absolute;
-  inset: 0 0 92px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.feed-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.feed-video::-webkit-media-controls,
+.feed-video::-webkit-media-controls-enclosure,
+.feed-video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
+/* --- Контент поверх видео в ленте --- */
+.content-bottom-group {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 80px 138px 90px 18px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.90) 0%,
+    rgba(0, 0, 0, 0.70) 40%,
+    rgba(0, 0, 0, 0.30) 75%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.content-bottom-group * {
+  pointer-events: auto;
+}
+
+.info-block {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: auto;
+}
+
+.info-title {
+  color: #ffffff !important;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 25px;
+  margin-bottom: 6px;
+  text-shadow: none;
+  white-space: normal;
+}
+
+.expandable-text {
+  color: #ffffff !important;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  text-shadow: none;
+}
+
+.text-preview {
+  display: block;
+  white-space: normal;
+  text-shadow: none;
+}
+
+.text-preview::-webkit-details-marker,
+.text-preview::marker {
+  display: none;
+}
+
+.full-text {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #ffffff !important;
+  line-height: 20px;
+  text-shadow: none;
+}
+
+.more-btn {
+  display: inline-block;
+  color: #2a9fff;
+  font-weight: 700;
+  margin-left: 4px;
+  text-shadow: none;
+  cursor: pointer;
+}
+
+/* --- Боковая панель действий с бейджиками --- */
+.action-buttons-group {
+  position: absolute;
+  right: 16px;
+  bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-end;
+  z-index: 3;
+}
+
+.tags-group {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  width: max-content;
+  padding: 3px 7px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+.tag-badge {
+  min-height: 22px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.tag-badge + .tag-badge {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.tag-text {
+  color: #111111;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tag-icon {
+  width: 14px;
+  color: #2a9fff;
+  font-size: 13px;
+  text-align: center;
+  flex: none;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.circle-btn {
+  width: 54px;
+  height: 54px;
+  background: rgba(42, 159, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.35);
   display: flex;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  backdrop-filter: blur(6px);
+}
+
+.circle-btn:hover {
+  background: #1a7cd8;
+  transform: scale(1.05);
+}
+
+.action-icon {
+  font-size: 22px;
   color: #ffffff;
-  font-size: 16px;
+}
+
+.action-label {
+  color: #ffffff !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: rgba(12, 18, 24, 0.68);
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  text-shadow: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
