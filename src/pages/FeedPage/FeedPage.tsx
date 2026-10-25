@@ -11,12 +11,16 @@ export const FeedPage: FC = () => {
   const id = searchParams.get('id')
   const next = searchParams.get('next') === 'true'
   const [method, setMethod] = useState<FeedMethod | null>(null)
+  // Храним id раскрытой услуги, чтобы при переходе к следующей описание снова было свернуто
+  const [expandedId, setExpandedId] = useState<number | null>(null)
 
   useEffect(() => {
     getFeedMethod(id, next).then((response) => setMethod(response?.method ?? null))
   }, [id, next])
 
   if (!method) return null
+
+  const expanded = expandedId === method.id
 
   return (
     <>
@@ -34,13 +38,16 @@ export const FeedPage: FC = () => {
       <div className="content-bottom-group">
         <section className="info-block">
           <h2 className="info-title">{method.title}</h2>
-          <details className="expandable-text">
-            <summary className="text-preview">
-              {method.description}
-              <span className="more-btn">больше</span>
-            </summary>
-            <div className="full-text">{method.description}</div>
-          </details>
+          <div className="expandable-text">
+            <p className={expanded ? 'full-text' : 'text-preview'}>{method.description}</p>
+            <button
+              type="button"
+              className="more-btn"
+              onClick={() => setExpandedId(expanded ? null : method.id)}
+            >
+              {expanded ? 'меньше' : 'больше'}
+            </button>
+          </div>
         </section>
       </div>
 
