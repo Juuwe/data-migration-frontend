@@ -9,6 +9,7 @@ import { saveSession } from '../../modules/authStorage'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES } from '../../Routes'
 import { clearDraft } from '../../slices/draftSlice'
+import { invalidateGrid, resetFeed } from '../../slices/methodsSlice'
 import { setAuthError, setAuthLoading, setUser } from '../../slices/userSlice'
 import './LoginPage.css'
 
@@ -52,6 +53,8 @@ export const LoginPage: FC = () => {
       saveSession(tokens.access_token, credentials.email, tokens.expires_in)
       dispatch(setUser({ email: credentials.email }))
       dispatch(clearDraft())
+      dispatch(invalidateGrid())
+      dispatch(resetFeed())
       navigate(ROUTES.GRID)
     } catch (requestError) {
       dispatch(setAuthError(getLoginErrorMessage(requestError)))

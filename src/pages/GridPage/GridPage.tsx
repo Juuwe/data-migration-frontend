@@ -41,13 +41,21 @@ export const GridPage: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useAppSelector((state) => state.methods.filters)
-  const { methods, loading, loaded, error } = useAppSelector((state) => state.methods.grid)
+  const { methods, loading, loaded, query, error } = useAppSelector(
+    (state) => state.methods.grid,
+  )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
 
   useEffect(() => {
-    dispatch(setFilters(parseRange(searchParams)))
-    dispatch(getMethods())
-  }, [dispatch, searchParams])
+    const range = parseRange(searchParams)
+    dispatch(setFilters(range))
+
+    // Повторно не загружаем уже полученный список при возврате на вкладку.
+    const isCached = query?.minTime === range.minTime && query.maxTime === range.maxTime
+    if (!isCached) {
+      dispatch(getMethods())
+    }
+  }, [dispatch, searchParams, query])
 
   const handleSearch = () => {
     const nextParams = new URLSearchParams({
@@ -84,10 +92,10 @@ export const GridPage: FC = () => {
         loading={loading}
       />
 
-      <section className="cards-grid" aria-busy={!loaded || loading}>
+      <section className="cards-grid" aria-busy={loading}>
         {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
 
-        {!loaded || loading ? (
+        {!loaded ? (
           <GridSkeleton />
         ) : methods.length ? (
           methods.map((method) => (

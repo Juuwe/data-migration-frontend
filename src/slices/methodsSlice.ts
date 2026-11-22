@@ -17,11 +17,13 @@ interface MethodsState {
     methods: MigrationMethod[]
     loading: boolean
     loaded: boolean
+    query: { minTime: number; maxTime: number } | null
     error: string | null
   }
   feed: {
     method: FeedMethod | null
     loading: boolean
+    key: string | null
     error: string | null
   }
 }
@@ -35,11 +37,13 @@ const initialState: MethodsState = {
     methods: [],
     loading: false,
     loaded: false,
+    query: null,
     error: null,
   },
   feed: {
     method: null,
     loading: false,
+    key: null,
     error: null,
   },
 }
@@ -158,7 +162,20 @@ const methodsSlice = createSlice({
       }
       state.grid.methods = []
       state.grid.loaded = false
+      state.grid.query = null
       state.grid.error = null
+    },
+    invalidateGrid(state) {
+      state.grid.loaded = false
+      state.grid.query = null
+    },
+    resetFeed(state) {
+      state.feed = {
+        method: null,
+        loading: false,
+        key: null,
+        error: null,
+      }
     },
   },
   extraReducers: (builder) => {
@@ -175,6 +192,10 @@ const methodsSlice = createSlice({
           minTime: action.payload.min_time,
           maxTime: action.payload.max_time,
         }
+        state.grid.query = {
+          minTime: action.payload.min_time,
+          maxTime: action.payload.max_time,
+        }
       })
       .addCase(getMethods.rejected, (state, action) => {
         state.grid.loading = false
@@ -185,12 +206,13 @@ const methodsSlice = createSlice({
       .addCase(getFeedMethod.pending, (state) => {
         state.feed.loading = true
         state.feed.error = null
-        state.feed.method = null
       })
       .addCase(getFeedMethod.fulfilled, (state, action) => {
         state.feed.loading = false
         state.feed.method = action.payload
-        if (!action.payload) {
+        if (action.payload) {
+          state.feed.key = `${action.meta.arg.id ?? ''}:${action.meta.arg.next ? 'next' : 'current'}`
+        } else {
           state.feed.error = 'Услуга не найдена'
         }
       })
@@ -237,5 +259,6 @@ const methodsSlice = createSlice({
   },
 })
 
-export const { setFilters, setMinTime, setMaxTime, resetFilters } = methodsSlice.actions
+export const { setFilters, setMinTime, setMaxTime, resetFilters, invalidateGrid, resetFeed } =
+  methodsSlice.actions
 export default methodsSlice.reducer

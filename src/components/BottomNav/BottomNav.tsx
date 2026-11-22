@@ -6,7 +6,7 @@ import { clearSession, getAccessToken } from '../../modules/authStorage'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import { clearDraft } from '../../slices/draftSlice'
-import { resetFilters } from '../../slices/methodsSlice'
+import { resetFeed, resetFilters } from '../../slices/methodsSlice'
 import { clearUser, setAuthLoading } from '../../slices/userSlice'
 import './BottomNav.css'
 
@@ -23,6 +23,8 @@ export const BottomNav: FC = () => {
   const location = useLocation()
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
   const authLoading = useAppSelector((state) => state.user.loading)
+  const filters = useAppSelector((state) => state.methods.filters)
+  const gridTo = `${ROUTES.GRID}?min_time=${filters.minTime}&max_time=${filters.maxTime}`
 
   const items: NavItem[] = [
     {
@@ -40,7 +42,7 @@ export const BottomNav: FC = () => {
     {
       key: 'GRID',
       icon: 'bi-grid',
-      to: ROUTES.GRID,
+      to: gridTo,
       active: location.pathname === ROUTES.GRID,
     },
   ]
@@ -68,6 +70,7 @@ export const BottomNav: FC = () => {
       dispatch(clearUser())
       dispatch(clearDraft())
       dispatch(resetFilters())
+      dispatch(resetFeed())
       dispatch(setAuthLoading(false))
       navigate(ROUTES.GRID)
     }

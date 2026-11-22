@@ -133,10 +133,10 @@ export const AddPage: FC = () => {
   const [video, setVideo] = useState<File | null>(null)
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !loaded) {
       dispatch(getDraft())
     }
-  }, [dispatch, isAuthenticated])
+  }, [dispatch, isAuthenticated, loaded])
 
   if (!isAuthenticated) {
     return <Navigate to={ROUTES.LOGIN} replace />

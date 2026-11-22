@@ -16,16 +16,20 @@ export const FeedPage: FC = () => {
   const next = searchParams.get('next') === 'true'
 
   const method = useAppSelector((state) => state.methods.feed.method)
+  const feedKey = useAppSelector((state) => state.methods.feed.key)
   const error = useAppSelector((state) => state.methods.feed.error)
   const loading = useAppSelector((state) => state.methods.feed.loading)
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
+  const requestKey = `${id ?? ''}:${next ? 'next' : 'current'}`
 
   // Храним id раскрытой услуги, чтобы при переходе к следующей описание снова было свернуто
   const [expandedId, setExpandedId] = useState<number | null>(null)
 
   useEffect(() => {
-    dispatch(getFeedMethod({ id, next }))
-  }, [dispatch, id, next])
+    if (feedKey !== requestKey) {
+      dispatch(getFeedMethod({ id, next }))
+    }
+  }, [dispatch, feedKey, id, next, requestKey])
 
   if (!method) {
     return error && !loading ? <p className="feed-error feed-error-page">{error}</p> : <FeedSkeleton />
