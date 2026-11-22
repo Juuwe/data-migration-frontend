@@ -1,0 +1,172 @@
+.skeleton-block {
+  position: relative;
+  overflow: hidden;
+  background: #e3e9f0;
+  border-radius: 8px;
+}
+
+.skeleton-block::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.65) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: skeleton-shimmer 1.4s infinite;
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Плитка */
+.skeleton-card {
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #e6ebf1;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(24, 39, 58, 0.07);
+}
+
+.skeleton-card-media {
+  height: 186px;
+  border-radius: 10px;
+}
+
+.skeleton-line {
+  height: 10px;
+}
+
+.skeleton-line-title {
+  width: 78%;
+  margin: 9px 2px 0;
+}
+
+.skeleton-line-time {
+  width: 52%;
+  margin: 7px 2px 2px;
+}
+
+/* Лента */
+.feed-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  background: #05080c;
+}
+
+.feed-skeleton-video {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  background: #111820;
+}
+
+.feed-skeleton .skeleton-block::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 100%
+  );
+}
+
+.feed-skeleton-bottom {
+  position: absolute;
+  right: 138px;
+  bottom: 90px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-skeleton-title {
+  width: 62%;
+  height: 18px;
+  background: #26313d;
+}
+
+.feed-skeleton-text {
+  width: 92%;
+  height: 12px;
+  background: #202a35;
+}
+
+.feed-skeleton-text-short {
+  width: 58%;
+}
+
+.feed-skeleton-actions {
+  position: absolute;
+  right: 16px;
+  bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.feed-skeleton-circle {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #26313d;
+}
+
+/* Добавление */
+.skeleton-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e6ebf1;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(24, 39, 58, 0.06);
+}
+
+.skeleton-panel-title {
+  width: 42%;
+  height: 14px;
+}
+
+.skeleton-input {
+  height: 38px;
+}
+
+/* Вход */
+.skeleton-login-title {
+  width: 68px;
+  height: 22px;
+  margin-bottom: 16px;
+}
+
+.skeleton-label {
+  width: 44px;
+  height: 10px;
+  margin-bottom: 6px;
+}
+
+.skeleton-input-last {
+  margin-bottom: 4px;
+}
+
+.skeleton-login-button {
+  height: 42px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-block::after {
+    animation: none;
+  }
+}

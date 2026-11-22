@@ -3,6 +3,7 @@ import { Alert } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 
 import { MethodCard } from '../../components/MethodCard/MethodCard'
+import { GridSkeleton } from '../../components/Skeletons/Skeletons'
 import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilter'
 import { MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
@@ -40,7 +41,7 @@ export const GridPage: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useAppSelector((state) => state.methods.filters)
-  const { methods, error } = useAppSelector((state) => state.methods.grid)
+  const { methods, loading, loaded, error } = useAppSelector((state) => state.methods.grid)
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
 
   useEffect(() => {
@@ -80,12 +81,15 @@ export const GridPage: FC = () => {
         setMinTime={(value) => dispatch(setMinTime(value))}
         setMaxTime={(value) => dispatch(setMaxTime(value))}
         onSubmit={handleSearch}
+        loading={loading}
       />
 
-      <section className="cards-grid">
-        {error ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
+      <section className="cards-grid" aria-busy={!loaded || loading}>
+        {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
 
-        {methods.length ? (
+        {!loaded || loading ? (
+          <GridSkeleton />
+        ) : methods.length ? (
           methods.map((method) => (
             <MethodCard
               key={method.id}

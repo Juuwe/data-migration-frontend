@@ -22,6 +22,7 @@ export const BottomNav: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
+  const authLoading = useAppSelector((state) => state.user.loading)
 
   const items: NavItem[] = [
     {
@@ -87,7 +88,12 @@ export const BottomNav: FC = () => {
       ))}
 
       {isAuthenticated ? (
-        <button type="button" className="nav-item nav-item-button" onClick={handleLogout}>
+        <button
+          type="button"
+          className="nav-item nav-item-button"
+          onClick={handleLogout}
+          disabled={authLoading}
+        >
           <i className="bi bi-box-arrow-right nav-icon" aria-hidden="true"></i>
           <span className="nav-label">Выход</span>
         </button>

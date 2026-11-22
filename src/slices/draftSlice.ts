@@ -8,12 +8,14 @@ import type { MigrationMethod } from '../modules/types'
 interface DraftState {
   draft: MigrationMethod | null
   loading: boolean
+  loaded: boolean
   error: string | null
 }
 
 const initialState: DraftState = {
   draft: null,
   loading: false,
+  loaded: false,
   error: null,
 }
 
@@ -75,6 +77,7 @@ const draftSlice = createSlice({
     },
     clearDraft(state) {
       state.draft = null
+      state.loaded = false
       state.error = null
     },
   },
@@ -87,10 +90,12 @@ const draftSlice = createSlice({
       })
       .addCase(getDraft.fulfilled, (state, action) => {
         state.loading = false
+        state.loaded = true
         state.draft = action.payload
       })
       .addCase(getDraft.rejected, (state, action) => {
         state.loading = false
+        state.loaded = true
         state.error = action.payload ?? 'Не удалось загрузить черновик'
       })
 

@@ -16,6 +16,7 @@ interface MethodsState {
   grid: {
     methods: MigrationMethod[]
     loading: boolean
+    loaded: boolean
     error: string | null
   }
   feed: {
@@ -33,6 +34,7 @@ const initialState: MethodsState = {
   grid: {
     methods: [],
     loading: false,
+    loaded: false,
     error: null,
   },
   feed: {
@@ -155,6 +157,7 @@ const methodsSlice = createSlice({
         maxTime: DEFAULT_MAX_TIME,
       }
       state.grid.methods = []
+      state.grid.loaded = false
       state.grid.error = null
     },
   },
@@ -166,6 +169,7 @@ const methodsSlice = createSlice({
       })
       .addCase(getMethods.fulfilled, (state, action) => {
         state.grid.loading = false
+        state.grid.loaded = true
         state.grid.methods = action.payload.methods
         state.filters = {
           minTime: action.payload.min_time,
@@ -174,6 +178,7 @@ const methodsSlice = createSlice({
       })
       .addCase(getMethods.rejected, (state, action) => {
         state.grid.loading = false
+        state.grid.loaded = true
         state.grid.error = action.payload ?? 'Не удалось загрузить услуги'
       })
 

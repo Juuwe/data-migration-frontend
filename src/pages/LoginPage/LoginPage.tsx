@@ -2,6 +2,7 @@ import { useState, type FC, type FormEvent } from 'react'
 import { Alert, Button, Form } from 'react-bootstrap'
 import { Navigate, useNavigate } from 'react-router-dom'
 
+import { LoginSkeleton } from '../../components/Skeletons/Skeletons'
 import { getHttpStatus } from '../../modules/apiError'
 import { loginRequest } from '../../modules/authApi'
 import { saveSession } from '../../modules/authStorage'
@@ -61,41 +62,43 @@ export const LoginPage: FC = () => {
 
   return (
     <section className="login-page">
-      <Form className="login-card" onSubmit={handleSubmit}>
-        <h2 className="login-title">Вход</h2>
+      {loading ? (
+        <LoginSkeleton />
+      ) : (
+        <Form className="login-card" onSubmit={handleSubmit}>
+          <h2 className="login-title">Вход</h2>
 
-        {error ? <Alert variant="danger">{error}</Alert> : null}
+          {error ? <Alert variant="danger">{error}</Alert> : null}
 
-        <Form.Group controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            name="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            autoComplete="email"
-            disabled={loading}
-            required
-          />
-        </Form.Group>
+          <Form.Group controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              required
+            />
+          </Form.Group>
 
-        <Form.Group controlId="password">
-          <Form.Label>Пароль</Form.Label>
-          <Form.Control
-            type="password"
-            name="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-            disabled={loading}
-            required
-          />
-        </Form.Group>
+          <Form.Group controlId="password">
+            <Form.Label>Пароль</Form.Label>
+            <Form.Control
+              type="password"
+              name="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+              required
+            />
+          </Form.Group>
 
-        <Button className="login-submit" type="submit" disabled={loading}>
-          Войти
-        </Button>
-      </Form>
+          <Button className="login-submit" type="submit">
+            Войти
+          </Button>
+        </Form>
+      )}
     </section>
   )
 }

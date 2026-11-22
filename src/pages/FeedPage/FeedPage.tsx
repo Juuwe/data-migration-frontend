@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
+import { FeedSkeleton } from '../../components/Skeletons/Skeletons'
 import { resolveVideoUrl } from '../../modules/media'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES } from '../../Routes'
@@ -27,7 +28,7 @@ export const FeedPage: FC = () => {
   }, [dispatch, id, next])
 
   if (!method) {
-    return error && !loading ? <p className="feed-error feed-error-page">{error}</p> : null
+    return error && !loading ? <p className="feed-error feed-error-page">{error}</p> : <FeedSkeleton />
   }
 
   const expanded = expandedId === method.id
@@ -79,6 +80,7 @@ export const FeedPage: FC = () => {
             className={`circle-btn like-btn ${method.is_liked ? 'is-liked' : ''}`}
             aria-label={method.is_liked ? 'Снять лайк' : 'Нравится'}
             aria-pressed={method.is_liked}
+            disabled={loading}
             onClick={handleLike}
           >
             <i className={`bi ${method.is_liked ? 'bi-heart-fill' : 'bi-heart'} action-icon`}></i>
@@ -87,9 +89,19 @@ export const FeedPage: FC = () => {
         </div>
 
         <div className="action-item">
-          <Link to={`${ROUTES.FEED}?id=${method.id}&next=true`} className="circle-btn" aria-label="Дальше">
-            <i className="bi bi-arrow-down action-icon"></i>
-          </Link>
+          {loading ? (
+            <span className="circle-btn disabled" aria-label="Дальше" aria-disabled="true">
+              <i className="bi bi-arrow-down action-icon"></i>
+            </span>
+          ) : (
+            <Link
+              to={`${ROUTES.FEED}?id=${method.id}&next=true`}
+              className="circle-btn"
+              aria-label="Дальше"
+            >
+              <i className="bi bi-arrow-down action-icon"></i>
+            </Link>
+          )}
           <span className="action-label">Дальше</span>
         </div>
 

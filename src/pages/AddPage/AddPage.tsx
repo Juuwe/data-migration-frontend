@@ -2,6 +2,7 @@ import { useEffect, useState, type ChangeEvent, type FC, type FormEvent } from '
 import { Alert, Button, Form } from 'react-bootstrap'
 import { Navigate, useNavigate } from 'react-router-dom'
 
+import { AddSkeleton } from '../../components/Skeletons/Skeletons'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { resolveImageUrl, resolveVideoUrl } from '../../modules/media'
 import type { MigrationMethod } from '../../modules/types'
@@ -125,7 +126,7 @@ const PublishForm: FC<PublishFormProps> = ({ draft, loading }) => {
 export const AddPage: FC = () => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
-  const { draft, loading, error } = useAppSelector((state) => state.draft)
+  const { draft, loading, loaded, error } = useAppSelector((state) => state.draft)
 
   const [title, setTitle] = useState('')
   const [image, setImage] = useState<File | null>(null)
@@ -167,7 +168,9 @@ export const AddPage: FC = () => {
 
       {error ? <Alert variant="danger">{error}</Alert> : null}
 
-      {draft === null ? (
+      {!loaded || (loading && draft === null) ? (
+        <AddSkeleton />
+      ) : draft === null ? (
         <Form className="add-form" onSubmit={handleCreate}>
           <div className="add-section">
             <h3 className="add-section-title">Карточка услуги</h3>

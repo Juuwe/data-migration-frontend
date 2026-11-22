@@ -12,6 +12,7 @@ interface Props {
   setMinTime: (value: number) => void
   setMaxTime: (value: number) => void
   onSubmit: () => void
+  loading?: boolean
 }
 
 const formatNumber = (value: number) => Number.parseFloat(value.toFixed(2)).toString()
@@ -19,14 +20,21 @@ const formatNumber = (value: number) => Number.parseFloat(value.toFixed(2)).toSt
 const trackPosition = (value: number) =>
   `calc(${TRACK_OFFSET}px + (100% - ${TRACK_OFFSET * 2}px) * ${(value - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)})`
 
-export const TimeRangeFilter: FC<Props> = ({ minTime, maxTime, setMinTime, setMaxTime, onSubmit }) => (
+export const TimeRangeFilter: FC<Props> = ({
+  minTime,
+  maxTime,
+  setMinTime,
+  setMaxTime,
+  onSubmit,
+  loading = false,
+}) => (
   <>
     <form
       id="filter-form"
       className="filter-section"
       onSubmit={(event) => {
         event.preventDefault()
-        onSubmit()
+        if (!loading) onSubmit()
       }}
     >
       <div className="filter-header">
@@ -54,6 +62,7 @@ export const TimeRangeFilter: FC<Props> = ({ minTime, maxTime, setMinTime, setMa
           step="0.01"
           value={minTime}
           className="range-input"
+          disabled={loading}
           onChange={(event) => setMinTime(Math.min(Number(event.target.value), maxTime - MIN_GAP))}
         />
         <input
@@ -64,12 +73,13 @@ export const TimeRangeFilter: FC<Props> = ({ minTime, maxTime, setMinTime, setMa
           step="0.01"
           value={maxTime}
           className="range-input"
+          disabled={loading}
           onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
         />
       </div>
     </form>
 
-    <Button className="search-btn" type="submit" form="filter-form">
+    <Button className="search-btn" type="submit" form="filter-form" disabled={loading}>
       Найти
     </Button>
   </>
