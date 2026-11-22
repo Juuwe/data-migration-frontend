@@ -6,17 +6,11 @@
 }
 
 .add-title {
-  margin-bottom: 4px;
+  margin-bottom: 16px;
   color: #20252b;
   font-size: 20px;
   font-weight: 700;
   line-height: 25px;
-}
-
-.add-subtitle {
-  margin-bottom: 16px;
-  color: #707680;
-  font-size: 12px;
 }
 
 .add-form {

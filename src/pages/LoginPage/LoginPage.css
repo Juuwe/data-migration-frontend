@@ -1,11 +1,10 @@
-.auth-page {
+.login-page {
   position: absolute;
   inset: 0;
-  overflow-y: auto;
   padding: 28px 16px 100px;
 }
 
-.auth-card {
+.login-card {
   padding: 18px 16px 20px;
   background: #ffffff;
   border: 1px solid #e6ebf1;
@@ -13,57 +12,22 @@
   box-shadow: 0 8px 24px rgba(24, 39, 58, 0.1);
 }
 
-.auth-tabs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px;
-  padding: 4px;
-  margin-bottom: 18px;
-  background: #eef3f8;
-  border-radius: 12px;
-}
-
-.auth-tab {
-  padding: 8px 10px;
-  color: #707680;
-  background: transparent;
-  border: none;
-  border-radius: 9px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.auth-tab.active {
-  color: #2a9fff;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(24, 39, 58, 0.08);
-}
-
-.auth-title {
-  margin-bottom: 6px;
+.login-title {
+  margin-bottom: 16px;
   color: #20252b;
   font-size: 20px;
   font-weight: 700;
   line-height: 25px;
 }
 
-.auth-subtitle {
-  margin-bottom: 16px;
-  color: #707680;
-  font-size: 13px;
-  line-height: 18px;
-}
-
-.auth-form .form-label {
+.login-card .form-label {
   margin-bottom: 4px;
   color: #35627f;
   font-size: 13px;
   font-weight: 600;
 }
 
-.auth-form .form-control {
+.login-card .form-control {
   min-height: 42px;
   margin-bottom: 14px;
   border: 1px solid #d9e6f0;
@@ -71,12 +35,12 @@
   font-size: 14px;
 }
 
-.auth-form .form-control:focus {
+.login-card .form-control:focus {
   border-color: #2a9fff;
   box-shadow: 0 0 0 3px rgba(42, 159, 255, 0.14);
 }
 
-.auth-submit {
+.login-submit {
   width: 100%;
   height: 42px;
   margin-top: 2px;
@@ -87,12 +51,12 @@
   font-weight: 600;
 }
 
-.auth-submit:hover,
-.auth-submit:focus {
+.login-submit:hover,
+.login-submit:focus {
   background: #1a7cd8;
 }
 
-.auth-card .alert {
+.login-card .alert {
   padding: 8px 10px;
   margin-bottom: 14px;
   font-size: 12px;

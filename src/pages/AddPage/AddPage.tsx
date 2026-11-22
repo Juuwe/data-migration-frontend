@@ -125,7 +125,6 @@ const PublishForm: FC<PublishFormProps> = ({ draft, loading }) => {
 export const AddPage: FC = () => {
   const dispatch = useAppDispatch()
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
-  const email = useAppSelector((state) => state.user.email)
   const { draft, loading, error } = useAppSelector((state) => state.draft)
 
   const [title, setTitle] = useState('')
@@ -165,7 +164,6 @@ export const AddPage: FC = () => {
   return (
     <section className="add-page">
       <h2 className="add-title">Добавление услуги</h2>
-      <p className="add-subtitle">Вы вошли как {email}</p>
 
       {error ? <Alert variant="danger">{error}</Alert> : null}
 
