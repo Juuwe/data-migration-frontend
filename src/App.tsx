@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import { AppLayout } from './AppLayout'
 import { AddPage } from './pages/AddPage/AddPage'
@@ -14,6 +14,7 @@ function App() {
     <BrowserRouter basename={basename}>
       <Routes>
         <Route element={<AppLayout />}>
+          <Route index element={<Navigate to={ROUTES.FEED} replace />} />
           <Route path={ROUTES.FEED} element={<FeedPage />} />
           <Route path={ROUTES.ADD} element={<AddPage />} />
           <Route path={ROUTES.GRID} element={<GridPage />} />
