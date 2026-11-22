@@ -56,7 +56,10 @@
 /* Лента */
 .feed-skeleton {
   position: absolute;
-  inset: 0;
+  top: var(--safe-top);
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 1;
   overflow: hidden;
   background: #05080c;
@@ -81,7 +84,7 @@
 .feed-skeleton-bottom {
   position: absolute;
   right: 138px;
-  bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(90px + var(--safe-bottom));
   left: 18px;
   display: flex;
   flex-direction: column;
@@ -107,7 +110,7 @@
 .feed-skeleton-actions {
   position: absolute;
   right: 16px;
-  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(100px + var(--safe-bottom));
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -117,13 +120,13 @@
 @media (min-width: 700px) {
   .feed-skeleton-bottom {
     right: 160px;
-    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(100px + var(--safe-bottom));
     left: 28px;
   }
 
   .feed-skeleton-actions {
     right: 24px;
-    bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(110px + var(--safe-bottom));
   }
 }
 

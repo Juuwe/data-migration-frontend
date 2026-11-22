@@ -3,10 +3,10 @@
   --card-media-height: 186px;
 
   position: absolute;
-  top: 140px;
+  top: calc(140px + var(--safe-top));
   left: 0;
   right: 0;
-  bottom: 92px;
+  bottom: calc(92px + var(--safe-bottom));
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   align-content: start;
@@ -30,7 +30,7 @@
     --grid-columns: 3;
     --card-media-height: 210px;
 
-    top: 148px;
+    top: calc(148px + var(--safe-top));
     gap: 16px;
     padding: 0 20px 12px;
   }

@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   overflow-y: auto;
-  padding: 28px 16px calc(100px + env(safe-area-inset-bottom, 0px));
+  padding: calc(28px + var(--safe-top)) 16px calc(100px + var(--safe-bottom));
 }
 
 .login-card {
@@ -76,6 +76,6 @@
 
 @media (min-width: 700px) {
   .login-page {
-    padding: 40px 24px calc(120px + env(safe-area-inset-bottom, 0px));
+    padding: calc(40px + var(--safe-top)) 24px calc(120px + var(--safe-bottom));
   }
 }

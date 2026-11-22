@@ -3,7 +3,7 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  bottom: max(12px, var(--safe-bottom));
   width: min(398px, calc(100% - 32px));
   height: 65px;
   background: rgba(255, 255, 255, 0.96);
