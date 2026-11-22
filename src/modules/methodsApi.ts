@@ -1,17 +1,29 @@
+import { DEFAULT_IMAGE, DEFAULT_VIDEO } from './media'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME, METHODS_MOCK } from './mock'
-import type { FeedResponse, GridResponse } from './types'
+import type { FeedResponse, GridResponse, MigrationMethod } from './types'
 
 // Mock-коллекция используется только гостем и только при недоступном бэкенде.
+// Медиа берём из public, чтобы mock работал без MinIO.
+
+const withLocalMedia = (method: MigrationMethod): MigrationMethod => ({
+  ...method,
+  image_url: DEFAULT_IMAGE,
+  video_url: DEFAULT_VIDEO,
+})
 
 export const getMockMethods = (minTime: number, maxTime: number): GridResponse => {
   if (Number.isNaN(minTime) || Number.isNaN(maxTime) || minTime < 0 || maxTime < minTime) {
-    return { methods: METHODS_MOCK, min_time: DEFAULT_MIN_TIME, max_time: DEFAULT_MAX_TIME }
+    return {
+      methods: METHODS_MOCK.map(withLocalMedia),
+      min_time: DEFAULT_MIN_TIME,
+      max_time: DEFAULT_MAX_TIME,
+    }
   }
 
   const methods = METHODS_MOCK.filter(
     (method) =>
       method.time_in_gb !== null && method.time_in_gb >= minTime && method.time_in_gb <= maxTime,
-  )
+  ).map(withLocalMedia)
   return { methods, min_time: minTime, max_time: maxTime }
 }
 
@@ -35,5 +47,5 @@ export const getMockFeedMethod = (id: string | null, next: boolean): FeedRespons
   }
 
   if (!method) return null
-  return { method: { ...method, is_liked: false } }
+  return { method: { ...withLocalMedia(method), is_liked: false } }
 }

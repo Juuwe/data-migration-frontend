@@ -80,7 +80,9 @@ export const LoginPage: FC = () => {
               name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
+              placeholder="example@mail.ru"
               autoComplete="email"
+              autoFocus
               required
             />
           </Form.Group>
@@ -92,6 +94,7 @@ export const LoginPage: FC = () => {
               name="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
+              placeholder="Введите пароль"
               autoComplete="current-password"
               required
             />

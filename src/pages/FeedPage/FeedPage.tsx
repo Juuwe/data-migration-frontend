@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 
 import { FeedSkeleton } from '../../components/Skeletons/Skeletons'
-import { resolveVideoUrl } from '../../modules/media'
+import { DEFAULT_VIDEO, resolveVideoUrl } from '../../modules/media'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES } from '../../Routes'
 import { getFeedMethod, setMethodLike } from '../../slices/methodsSlice'
@@ -56,6 +56,10 @@ export const FeedPage: FC = () => {
           loop
           muted
           playsInline
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = DEFAULT_VIDEO
+          }}
         />
       </div>
 

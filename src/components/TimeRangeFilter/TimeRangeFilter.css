@@ -97,13 +97,13 @@
   left: 16px;
   right: 16px;
   width: auto;
-  height: 30px;
+  height: 40px;
   background: #2a9fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   color: #ffffff;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -123,18 +123,18 @@
   }
 
   .search-btn {
-    left: 20px;
-    right: 20px;
+    top: 88px;
+    left: 50%;
+    right: auto;
+    width: min(420px, calc(100% - 40px));
+    height: 46px;
+    transform: translateX(-50%);
+    font-size: 15px;
   }
 }
 
 @media (min-width: 1000px) {
   .filter-section {
-    left: 24px;
-    right: 24px;
-  }
-
-  .search-btn {
     left: 24px;
     right: 24px;
   }

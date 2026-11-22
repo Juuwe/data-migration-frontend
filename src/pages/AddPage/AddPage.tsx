@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 
 import { AddSkeleton } from '../../components/Skeletons/Skeletons'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
-import { resolveImageUrl, resolveVideoUrl } from '../../modules/media'
+import { DEFAULT_IMAGE, DEFAULT_VIDEO, resolveImageUrl, resolveVideoUrl } from '../../modules/media'
 import type { MigrationMethod } from '../../modules/types'
 import { ROUTES } from '../../Routes'
 import { createDraft, getDraft, publishDraft, setDraftError } from '../../slices/draftSlice'
@@ -63,8 +63,25 @@ const PublishForm: FC<PublishFormProps> = ({ draft, loading }) => {
         <h3 className="add-section-title">{draft.title}</h3>
 
         <div className="draft-media">
-          <img src={resolveImageUrl(draft.image_url)} alt={draft.title} />
-          <video src={resolveVideoUrl(draft.video_url)} muted loop autoPlay playsInline />
+          <img
+            src={resolveImageUrl(draft.image_url)}
+            alt={draft.title}
+            onError={(event) => {
+              event.currentTarget.onerror = null
+              event.currentTarget.src = DEFAULT_IMAGE
+            }}
+          />
+          <video
+            src={resolveVideoUrl(draft.video_url)}
+            muted
+            loop
+            autoPlay
+            playsInline
+            onError={(event) => {
+              event.currentTarget.onerror = null
+              event.currentTarget.src = DEFAULT_VIDEO
+            }}
+          />
         </div>
       </div>
 

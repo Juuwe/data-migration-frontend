@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import { Card } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-import { resolveImageUrl } from '../../modules/media'
+import { DEFAULT_IMAGE, resolveImageUrl } from '../../modules/media'
 import { ROUTES } from '../../Routes'
 import './MethodCard.css'
 
@@ -26,7 +26,15 @@ export const MethodCard: FC<Props> = ({
   <Card as="article" className="service-card">
     <Link to={`${ROUTES.FEED}?id=${id}`} className="service-card-link">
       <div className="card-media">
-        <img src={resolveImageUrl(image_url)} alt={title} className="card-img" />
+        <img
+          src={resolveImageUrl(image_url)}
+          alt={title}
+          className="card-img"
+          onError={(event) => {
+            event.currentTarget.onerror = null
+            event.currentTarget.src = DEFAULT_IMAGE
+          }}
+        />
         <div className="card-like-badge" aria-label={`Количество лайков: ${likes_count}`}>
           <i className="bi bi-heart-fill card-like-icon"></i>
           <span>{likes_count}</span>
