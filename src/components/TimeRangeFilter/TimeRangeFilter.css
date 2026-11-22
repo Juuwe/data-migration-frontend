@@ -124,17 +124,21 @@
 
   .search-btn {
     top: 88px;
-    left: 50%;
-    right: auto;
-    width: min(420px, calc(100% - 40px));
+    left: 20px;
+    right: 20px;
+    width: auto;
     height: 46px;
-    transform: translateX(-50%);
     font-size: 15px;
   }
 }
 
 @media (min-width: 1000px) {
   .filter-section {
+    left: 24px;
+    right: 24px;
+  }
+
+  .search-btn {
     left: 24px;
     right: 24px;
   }
