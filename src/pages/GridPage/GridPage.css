@@ -13,3 +13,11 @@
   overflow-y: auto;
   z-index: 4;
 }
+
+.grid-alert {
+  grid-column: 1 / -1;
+  padding: 6px 8px;
+  margin: 0;
+  font-size: 12px;
+  border-radius: 8px;
+}

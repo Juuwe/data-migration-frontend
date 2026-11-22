@@ -1,33 +1,52 @@
 import { useEffect, useState, type FC } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
-import { getFeedMethod } from '../../modules/methodsApi'
-import { DEFAULT_VIDEO } from '../../modules/media'
-import type { FeedMethod } from '../../modules/types'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+
+import { resolveVideoUrl } from '../../modules/media'
+import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES } from '../../Routes'
+import { getFeedMethod, setMethodLike } from '../../slices/methodsSlice'
 import './FeedPage.css'
 
 export const FeedPage: FC = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const id = searchParams.get('id')
   const next = searchParams.get('next') === 'true'
-  const [method, setMethod] = useState<FeedMethod | null>(null)
+
+  const method = useAppSelector((state) => state.methods.feed.method)
+  const error = useAppSelector((state) => state.methods.feed.error)
+  const loading = useAppSelector((state) => state.methods.feed.loading)
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
+
   // Храним id раскрытой услуги, чтобы при переходе к следующей описание снова было свернуто
   const [expandedId, setExpandedId] = useState<number | null>(null)
 
   useEffect(() => {
-    getFeedMethod(id, next).then((response) => setMethod(response?.method ?? null))
-  }, [id, next])
+    dispatch(getFeedMethod({ id, next }))
+  }, [dispatch, id, next])
 
-  if (!method) return null
+  if (!method) {
+    return error && !loading ? <p className="feed-error feed-error-page">{error}</p> : null
+  }
 
   const expanded = expandedId === method.id
-  
+
+  const handleLike = () => {
+    if (!isAuthenticated) {
+      navigate(ROUTES.LOGIN)
+      return
+    }
+
+    dispatch(setMethodLike({ id: method.id, like: method.is_liked ? 0 : 1 }))
+  }
+
   return (
     <>
       <div className="media-container">
         <video
           className="feed-video"
-          src={method.video_url || DEFAULT_VIDEO}
+          src={resolveVideoUrl(method.video_url)}
           autoPlay
           loop
           muted
@@ -35,11 +54,13 @@ export const FeedPage: FC = () => {
         />
       </div>
 
+      {error ? <p className="feed-error">{error}</p> : null}
+
       <div className="content-bottom-group">
         <section className="info-block">
           <h2 className="info-title">{method.title}</h2>
           <div className="expandable-text">
-            <p className={expanded ? 'full-text' : 'text-preview'}>{method.description}</p>
+            <p className={expanded ? 'full-text' : 'text-preview'}>{method.description ?? ''}</p>
             <button
               type="button"
               className="more-btn"
@@ -53,9 +74,15 @@ export const FeedPage: FC = () => {
 
       <div className="action-buttons-group">
         <div className="action-item">
-          <div className="circle-btn" aria-label="Нравится">
-            <i className="bi bi-heart-fill action-icon"></i>
-          </div>
+          <button
+            type="button"
+            className={`circle-btn like-btn ${method.is_liked ? 'is-liked' : ''}`}
+            aria-label={method.is_liked ? 'Снять лайк' : 'Нравится'}
+            aria-pressed={method.is_liked}
+            onClick={handleLike}
+          >
+            <i className={`bi ${method.is_liked ? 'bi-heart-fill' : 'bi-heart'} action-icon`}></i>
+          </button>
           <span className="action-label">{method.likes_count}</span>
         </div>
 
@@ -70,12 +97,16 @@ export const FeedPage: FC = () => {
           <div className="tag-badge">
             <i className="bi bi-clock tag-icon" aria-hidden="true"></i>
             <span className="visually-hidden">Время на гигабайт: </span>
-            <span className="tag-text">{method.time_in_gb?.toFixed(2)} сек/Гб</span>
+            <span className="tag-text">
+              {method.time_in_gb !== null ? `${method.time_in_gb.toFixed(2)} сек/Гб` : '—'}
+            </span>
           </div>
           <div className="tag-badge" title="Коэффициент надёжности">
             <i className="bi bi-shield-check tag-icon" aria-hidden="true"></i>
             <span className="visually-hidden">Коэффициент надёжности: </span>
-            <span className="tag-text">{method.reliability?.toFixed(3)}</span>
+            <span className="tag-text">
+              {method.reliability !== null ? method.reliability.toFixed(3) : '—'}
+            </span>
           </div>
         </div>
       </div>

@@ -1,10 +1,9 @@
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME, METHODS_MOCK } from './mock'
 import type { FeedResponse, GridResponse } from './types'
 
-// Пока функции работают с mock-коллекцией и повторяют поведение
-// GET /api/methods и GET /api/methods/feed
+// Mock-коллекция используется только гостем и только при недоступном бэкенде.
 
-export const getMethods = async (minTime: number, maxTime: number): Promise<GridResponse> => {
+export const getMockMethods = (minTime: number, maxTime: number): GridResponse => {
   if (Number.isNaN(minTime) || Number.isNaN(maxTime) || minTime < 0 || maxTime < minTime) {
     return { methods: METHODS_MOCK, min_time: DEFAULT_MIN_TIME, max_time: DEFAULT_MAX_TIME }
   }
@@ -17,7 +16,7 @@ export const getMethods = async (minTime: number, maxTime: number): Promise<Grid
 }
 
 // null вместо ответов 400 и 404
-export const getFeedMethod = async (id: string | null, next: boolean): Promise<FeedResponse | null> => {
+export const getMockFeedMethod = (id: string | null, next: boolean): FeedResponse | null => {
   let method = METHODS_MOCK[0]
 
   if (id === null) {

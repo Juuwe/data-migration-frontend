@@ -1,10 +1,9 @@
 import type { FC } from 'react'
 import { Button } from 'react-bootstrap'
+
+import { MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
 import './TimeRangeFilter.css'
 
-const MIN_GAP = 0.05
-const SLIDER_MIN = 0.01
-const SLIDER_MAX = 1.0
 const TRACK_OFFSET = 19
 
 interface Props {

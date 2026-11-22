@@ -103,3 +103,24 @@
   font-size: 12px;
   color: #2a9fff;
 }
+
+.card-delete-btn {
+  flex: none;
+  width: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: #b4232a;
+  background: #fff1f2;
+  border: 1px solid #f5cdd0;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.card-delete-btn:hover {
+  background: #ffe1e4;
+}

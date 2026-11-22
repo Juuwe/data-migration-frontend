@@ -27,13 +27,24 @@
   justify-content: center;
   gap: 3px;
   padding: 8px 16px;
+  border: none;
   border-radius: 14px;
+  background: transparent;
   text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.2s ease;
+}
+
+.nav-item:hover {
+  background: rgba(42, 159, 255, 0.08);
 }
 
 .nav-item.active {
   background: rgba(42, 159, 255, 0.12);
+}
+
+.nav-item-button {
+  font-family: inherit;
 }
 
 .nav-label {

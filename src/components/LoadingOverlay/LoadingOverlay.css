@@ -1,0 +1,30 @@
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(246, 248, 251, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  cursor: wait;
+}
+
+.loading-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  color: #20252b;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid #e6ebf1;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(24, 39, 58, 0.18);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.loading-box .spinner-border {
+  color: #2a9fff;
+}

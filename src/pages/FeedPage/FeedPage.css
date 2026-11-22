@@ -188,6 +188,42 @@
   transform: scale(1.05);
 }
 
+.like-btn {
+  padding: 0;
+  cursor: pointer;
+}
+
+.like-btn.is-liked {
+  background: #ff5a5f;
+}
+
+.like-btn.is-liked:hover {
+  background: #e2464c;
+}
+
+.feed-error {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  right: 16px;
+  z-index: 5;
+  padding: 8px 10px;
+  color: #ffffff;
+  background: rgba(180, 32, 42, 0.92);
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.feed-error-page {
+  top: 90px;
+  color: #b4232a;
+  background: #ffffff;
+  border: 1px solid #f0c4c7;
+  box-shadow: 0 4px 12px rgba(24, 39, 58, 0.08);
+}
+
 .action-icon {
   font-size: 22px;
   color: #ffffff;

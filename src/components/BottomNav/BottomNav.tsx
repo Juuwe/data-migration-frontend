@@ -1,35 +1,97 @@
 import type { FC } from 'react'
-import { NavLink } from 'react-router-dom'
-import { ROUTES, ROUTE_LABELS, type RouteKeyType } from '../../Routes'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+
+import { logoutRequest } from '../../modules/authApi'
+import { clearSession, getAccessToken } from '../../modules/authStorage'
+import { useAppDispatch, useAppSelector } from '../../modules/hooks'
+import { ROUTES, ROUTE_LABELS } from '../../Routes'
+import { clearDraft } from '../../slices/draftSlice'
+import { resetFilters } from '../../slices/methodsSlice'
+import { clearUser, setAuthLoading } from '../../slices/userSlice'
 import './BottomNav.css'
 
 interface NavItem {
-  key: RouteKeyType
+  key: 'FEED' | 'ADD' | 'GRID' | 'LOGIN'
   icon: string
-  disabled?: boolean
+  to: string
+  active: boolean
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { key: 'FEED', icon: 'bi-play-btn' },
-  { key: 'ADD', icon: 'bi-plus-square', disabled: true },
-  { key: 'GRID', icon: 'bi-grid' },
-  { key: 'LOGIN', icon: 'bi-box-arrow-in-right', disabled: true },
-]
+export const BottomNav: FC = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
 
-export const BottomNav: FC = () => (
-  <nav className="bottom-nav">
-    {NAV_ITEMS.map(({ key, icon, disabled }) =>
-      disabled ? (
-        <span key={key} className="nav-item disabled" aria-disabled="true">
-          <i className={`bi ${icon} nav-icon`}></i>
+  const items: NavItem[] = [
+    {
+      key: 'FEED',
+      icon: 'bi-play-btn',
+      to: ROUTES.FEED,
+      active: location.pathname === ROUTES.FEED,
+    },
+    {
+      key: 'ADD',
+      icon: 'bi-plus-square',
+      to: isAuthenticated ? ROUTES.ADD : ROUTES.LOGIN,
+      active: location.pathname === ROUTES.ADD,
+    },
+    {
+      key: 'GRID',
+      icon: 'bi-grid',
+      to: ROUTES.GRID,
+      active: location.pathname === ROUTES.GRID,
+    },
+  ]
+
+  if (!isAuthenticated) {
+    items.push({
+      key: 'LOGIN',
+      icon: 'bi-box-arrow-in-right',
+      to: ROUTES.LOGIN,
+      active: location.pathname === ROUTES.LOGIN,
+    })
+  }
+
+  const handleLogout = async () => {
+    dispatch(setAuthLoading(true))
+    try {
+      const token = getAccessToken()
+      if (token) {
+        await logoutRequest(token)
+      }
+    } catch {
+      // Даже если сервер недоступен, локальное состояние нужно очистить.
+    } finally {
+      clearSession()
+      dispatch(clearUser())
+      dispatch(clearDraft())
+      dispatch(resetFilters())
+      dispatch(setAuthLoading(false))
+      navigate(ROUTES.GRID)
+    }
+  }
+
+  return (
+    <nav className="bottom-nav">
+      {items.map(({ key, icon, to, active }) => (
+        <Link
+          key={key}
+          to={to}
+          className={`nav-item ${active ? 'active' : ''}`}
+          aria-current={active ? 'page' : undefined}
+        >
+          <i className={`bi ${icon} nav-icon`} aria-hidden="true"></i>
           <span className="nav-label">{ROUTE_LABELS[key]}</span>
-        </span>
-      ) : (
-        <NavLink key={key} to={ROUTES[key]} className="nav-item">
-          <i className={`bi ${icon} nav-icon`}></i>
-          <span className="nav-label">{ROUTE_LABELS[key]}</span>
-        </NavLink>
-      ),
-    )}
-  </nav>
-)
+        </Link>
+      ))}
+
+      {isAuthenticated ? (
+        <button type="button" className="nav-item nav-item-button" onClick={handleLogout}>
+          <i className="bi bi-box-arrow-right nav-icon" aria-hidden="true"></i>
+          <span className="nav-label">Выход</span>
+        </button>
+      ) : null}
+    </nav>
+  )
+}

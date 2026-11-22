@@ -1,46 +1,102 @@
-import { useEffect, useEffectEvent, useState, type FC } from 'react'
+import { useEffect, type FC } from 'react'
+import { Alert } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
+
 import { MethodCard } from '../../components/MethodCard/MethodCard'
 import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilter'
-import { getMethods } from '../../modules/methodsApi'
+import { MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
+import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../../modules/mock'
-import type { MigrationMethod } from '../../modules/types'
+import {
+  deleteMethod,
+  getMethods,
+  setFilters,
+  setMaxTime,
+  setMinTime,
+} from '../../slices/methodsSlice'
 import './GridPage.css'
 
+const parseRange = (searchParams: URLSearchParams) => {
+  if (!searchParams.has('min_time') && !searchParams.has('max_time')) {
+    return { minTime: DEFAULT_MIN_TIME, maxTime: DEFAULT_MAX_TIME }
+  }
+
+  const minTime = Number.parseFloat(searchParams.get('min_time') ?? '')
+  const maxTime = Number.parseFloat(searchParams.get('max_time') ?? '')
+
+  const isValid =
+    Number.isFinite(minTime) &&
+    Number.isFinite(maxTime) &&
+    minTime >= SLIDER_MIN &&
+    maxTime <= SLIDER_MAX &&
+    maxTime - minTime >= MIN_GAP
+
+  return isValid
+    ? { minTime, maxTime }
+    : { minTime: DEFAULT_MIN_TIME, maxTime: DEFAULT_MAX_TIME }
+}
+
 export const GridPage: FC = () => {
+  const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [minTime, setMinTime] = useState(DEFAULT_MIN_TIME)
-  const [maxTime, setMaxTime] = useState(DEFAULT_MAX_TIME)
-  const [methods, setMethods] = useState<MigrationMethod[]>([])
+  const filters = useAppSelector((state) => state.methods.filters)
+  const { methods, error } = useAppSelector((state) => state.methods.grid)
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
 
   useEffect(() => {
-    getMethods(
-      Number.parseFloat(searchParams.get('min_time') ?? ''),
-      Number.parseFloat(searchParams.get('max_time') ?? ''),
-    ).then((response) => {
-      setMethods(response.methods)
-      setMinTime(response.min_time)
-      setMaxTime(response.max_time)
-    })
-  }, [searchParams])
+    dispatch(setFilters(parseRange(searchParams)))
+    dispatch(getMethods())
+  }, [dispatch, searchParams])
 
   const handleSearch = () => {
-    setSearchParams({ min_time: String(minTime), max_time: String(maxTime) })
+    const nextParams = new URLSearchParams({
+      min_time: String(filters.minTime),
+      max_time: String(filters.maxTime),
+    })
+
+    if (nextParams.toString() === searchParams.toString()) {
+      dispatch(getMethods())
+    } else {
+      setSearchParams(nextParams)
+    }
   }
-  
+
+  const handleDelete = async (id: number, title: string) => {
+    if (!window.confirm(`Удалить услугу «${title}»?`)) return
+
+    try {
+      await dispatch(deleteMethod(id)).unwrap()
+      dispatch(getMethods())
+    } catch {
+      // Текст ошибки уже записан в Redux.
+    }
+  }
+
   return (
     <>
       <TimeRangeFilter
-        minTime={minTime}
-        maxTime={maxTime}
-        setMinTime={setMinTime}
-        setMaxTime={setMaxTime}
+        minTime={filters.minTime}
+        maxTime={filters.maxTime}
+        setMinTime={(value) => dispatch(setMinTime(value))}
+        setMaxTime={(value) => dispatch(setMaxTime(value))}
         onSubmit={handleSearch}
       />
 
       <section className="cards-grid">
+        {error ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
+
         {methods.length ? (
-          methods.map((method) => <MethodCard key={method.id} {...method} />)
+          methods.map((method) => (
+            <MethodCard
+              key={method.id}
+              {...method}
+              onDelete={
+                isAuthenticated && method.created_by_current_user
+                  ? () => handleDelete(method.id, method.title)
+                  : undefined
+              }
+            />
+          ))
         ) : (
           <p className="no-data">Услуги миграции не найдены</p>
         )}
