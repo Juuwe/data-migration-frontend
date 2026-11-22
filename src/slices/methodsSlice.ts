@@ -3,6 +3,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/tool
 import { api } from '../api'
 import { toFeedMethod, toMigrationMethod } from '../modules/adapters'
 import { getRequestErrorMessage, isBackendUnavailable } from '../modules/apiError'
+import { IS_STATIC_MODE } from '../modules/env'
 import { getMockFeedMethod, getMockMethods } from '../modules/methodsApi'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../modules/mock'
 import type { FeedMethod, GridResponse, MigrationMethod } from '../modules/types'
@@ -56,6 +57,11 @@ export const getMethods = createAsyncThunk<
   const { methods, user } = getState()
   const { filters } = methods
 
+  // GitHub Pages работает без бэкенда: гость получает только mock-коллекцию.
+  if (IS_STATIC_MODE && !user.isAuthenticated) {
+    return getMockMethods(filters.minTime, filters.maxTime)
+  }
+
   try {
     const response = await api.api.methodsList({
       min_time: filters.minTime,
@@ -90,6 +96,10 @@ export const getFeedMethod = createAsyncThunk<
     (methodId === undefined || !Number.isInteger(methodId) || methodId <= 0)
   ) {
     return rejectWithValue('Некорректный id услуги')
+  }
+
+  if (IS_STATIC_MODE && !user.isAuthenticated) {
+    return getMockFeedMethod(id, next)?.method ?? null
   }
 
   try {

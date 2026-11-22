@@ -7,9 +7,11 @@ import { GridPage } from './pages/GridPage/GridPage'
 import { LoginPage } from './pages/LoginPage/LoginPage'
 import { ROUTES } from './Routes'
 
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route element={<AppLayout />}>
           <Route path={ROUTES.FEED} element={<FeedPage />} />

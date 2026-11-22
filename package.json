@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "postbuild": "node scripts/create-404.mjs",
+    "cert": "node scripts/generate-cert.mjs",
     "generate-api": "node scripts/generate-api.mjs",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve:https": "node server/https-proxy.mjs"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.15.0",
@@ -29,6 +32,7 @@
     "oxlint": "^1.88.0",
     "swagger-typescript-api": "^13.14.0",
     "typescript": "~6.0.3",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vite-plugin-pwa": "^2.0.0"
   }
 }

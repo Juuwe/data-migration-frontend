@@ -1,14 +1,22 @@
 .app-viewport {
-  width: 430px;
-  height: 751px;
+  width: 100%;
+  height: 100dvh;
   position: relative;
   background-color: #000000;
-  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(24, 39, 58, 0.08);
-  box-shadow: 0 20px 55px rgba(24, 39, 58, 0.18), 0 4px 14px rgba(24, 39, 58, 0.08);
 }
 
 .app-viewport.theme-light {
   background-color: #f6f8fb;
+}
+
+@media (min-width: 700px) {
+  .app-viewport {
+    width: min(100%, 1100px);
+    height: calc(100dvh - 48px);
+    max-height: 900px;
+    border-radius: 24px;
+    border: 1px solid rgba(24, 39, 58, 0.08);
+    box-shadow: 0 20px 55px rgba(24, 39, 58, 0.18), 0 4px 14px rgba(24, 39, 58, 0.08);
+  }
 }

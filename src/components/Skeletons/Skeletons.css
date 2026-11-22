@@ -35,7 +35,7 @@
 }
 
 .skeleton-card-media {
-  height: 186px;
+  height: var(--card-media-height, 186px);
   border-radius: 10px;
 }
 
@@ -81,7 +81,7 @@
 .feed-skeleton-bottom {
   position: absolute;
   right: 138px;
-  bottom: 90px;
+  bottom: calc(90px + env(safe-area-inset-bottom, 0px));
   left: 18px;
   display: flex;
   flex-direction: column;
@@ -107,11 +107,24 @@
 .feed-skeleton-actions {
   position: absolute;
   right: 16px;
-  bottom: 100px;
+  bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: 14px;
   align-items: center;
+}
+
+@media (min-width: 700px) {
+  .feed-skeleton-bottom {
+    right: 160px;
+    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    left: 28px;
+  }
+
+  .feed-skeleton-actions {
+    right: 24px;
+    bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 .feed-skeleton-circle {

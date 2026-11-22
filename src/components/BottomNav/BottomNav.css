@@ -3,8 +3,8 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 14px;
-  width: 398px;
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  width: min(398px, calc(100% - 32px));
   height: 65px;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(16px);
