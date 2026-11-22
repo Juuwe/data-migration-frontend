@@ -18,7 +18,10 @@ interface MethodsState {
     methods: MigrationMethod[]
     loading: boolean
     loaded: boolean
-    query: { minTime: number; maxTime: number } | null
+    query: { minTime: number; maxTime: number; page: number } | null
+    page: number
+    limit: number
+    total: number
     error: string | null
   }
   feed: {
@@ -39,6 +42,9 @@ const initialState: MethodsState = {
     loading: false,
     loaded: false,
     query: null,
+    page: 1,
+    limit: 10,
+    total: 0,
     error: null,
   },
   feed: {
@@ -55,17 +61,20 @@ export const getMethods = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >('methods/getMethods', async (_, { getState, rejectWithValue }) => {
   const { methods, user } = getState()
-  const { filters } = methods
+  const { filters, grid } = methods
+  const { page, limit } = grid
 
   // GitHub Pages работает без бэкенда: гость получает только mock-коллекцию.
   if (IS_STATIC_MODE && !user.isAuthenticated) {
-    return getMockMethods(filters.minTime, filters.maxTime)
+    return getMockMethods(filters.minTime, filters.maxTime, page, limit)
   }
 
   try {
     const response = await api.api.methodsList({
       min_time: filters.minTime,
       max_time: filters.maxTime,
+      page,
+      limit,
     })
     const data = response.data
 
@@ -73,11 +82,14 @@ export const getMethods = createAsyncThunk<
       methods: (data.methods ?? []).map(toMigrationMethod),
       min_time: data.min_time ?? filters.minTime,
       max_time: data.max_time ?? filters.maxTime,
+      total: data.total ?? 0,
+      page: data.page ?? page,
+      limit: data.limit ?? limit,
     }
   } catch (error) {
     // Mock-коллекция доступна только гостю и только при недоступном бэкенде.
     if (!user.isAuthenticated && isBackendUnavailable(error)) {
-      return getMockMethods(filters.minTime, filters.maxTime)
+      return getMockMethods(filters.minTime, filters.maxTime, page, limit)
     }
     return rejectWithValue(getRequestErrorMessage(error, 'Не удалось загрузить услуги'))
   }
@@ -164,6 +176,9 @@ const methodsSlice = createSlice({
     setMaxTime(state, action: PayloadAction<number>) {
       state.filters.maxTime = action.payload
     },
+    setCurrentPage(state, action: PayloadAction<number>) {
+      state.grid.page = Math.max(1, action.payload)
+    },
     // Сбрасываем фильтр пользователя при выходе из аккаунта.
     resetFilters(state) {
       state.filters = {
@@ -173,6 +188,8 @@ const methodsSlice = createSlice({
       state.grid.methods = []
       state.grid.loaded = false
       state.grid.query = null
+      state.grid.page = 1
+      state.grid.total = 0
       state.grid.error = null
     },
     invalidateGrid(state) {
@@ -198,6 +215,9 @@ const methodsSlice = createSlice({
         state.grid.loading = false
         state.grid.loaded = true
         state.grid.methods = action.payload.methods
+        state.grid.page = action.payload.page
+        state.grid.limit = action.payload.limit
+        state.grid.total = action.payload.total
         state.filters = {
           minTime: action.payload.min_time,
           maxTime: action.payload.max_time,
@@ -205,6 +225,7 @@ const methodsSlice = createSlice({
         state.grid.query = {
           minTime: action.payload.min_time,
           maxTime: action.payload.max_time,
+          page: action.payload.page,
         }
       })
       .addCase(getMethods.rejected, (state, action) => {
@@ -269,6 +290,13 @@ const methodsSlice = createSlice({
   },
 })
 
-export const { setFilters, setMinTime, setMaxTime, resetFilters, invalidateGrid, resetFeed } =
-  methodsSlice.actions
+export const {
+  setFilters,
+  setMinTime,
+  setMaxTime,
+  setCurrentPage,
+  resetFilters,
+  invalidateGrid,
+  resetFeed,
+} = methodsSlice.actions
 export default methodsSlice.reducer

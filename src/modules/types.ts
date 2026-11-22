@@ -14,12 +14,17 @@ export interface MigrationMethod {
 
 export interface FeedMethod extends MigrationMethod {
   is_liked: boolean
+  feed_position?: number
+  feed_size?: number
 }
 
 export interface GridResponse {
   methods: MigrationMethod[]
   min_time: number
   max_time: number
+  total: number
+  page: number
+  limit: number
 }
 
 export interface FeedResponse {

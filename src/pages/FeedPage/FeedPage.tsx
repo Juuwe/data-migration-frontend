@@ -65,6 +65,12 @@ export const FeedPage: FC = () => {
 
       {error ? <p className="feed-error">{error}</p> : null}
 
+      {method.feed_size ? (
+        <div className="feed-position">
+          {method.feed_position} / {method.feed_size}
+        </div>
+      ) : null}
+
       <div className="content-bottom-group">
         <section className="info-block">
           <h2 className="info-title">{method.title}</h2>

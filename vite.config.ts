@@ -4,6 +4,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const isGitHubPages = process.env.GITHUB_PAGES === 'true'
 const base = isGitHubPages ? '/data-migration-frontend/' : '/'
+const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:8081'
+const s3Target = process.env.S3_PROXY_TARGET ?? 'http://localhost:9010'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,14 +15,14 @@ export default defineConfig({
     proxy: {
       // Бэкенд домена услуг: снимает ограничение CORS.
       '/api': {
-        target: 'http://localhost:8081',
+        target: apiTarget,
         changeOrigin: true,
         timeout: 3000,
         proxyTimeout: 3000,
       },
       // Второй маршрут для объектов MinIO (изображения и видео).
       '/s3': {
-        target: 'http://localhost:9010',
+        target: s3Target,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/s3/, ''),
       },

@@ -11,20 +11,28 @@ const withLocalMedia = (method: MigrationMethod): MigrationMethod => ({
   video_url: DEFAULT_VIDEO,
 })
 
-export const getMockMethods = (minTime: number, maxTime: number): GridResponse => {
-  if (Number.isNaN(minTime) || Number.isNaN(maxTime) || minTime < 0 || maxTime < minTime) {
-    return {
-      methods: METHODS_MOCK.map(withLocalMedia),
-      min_time: DEFAULT_MIN_TIME,
-      max_time: DEFAULT_MAX_TIME,
-    }
-  }
+export const getMockMethods = (
+  minTime: number,
+  maxTime: number,
+  page: number,
+  limit: number,
+): GridResponse => {
+  const isValid = !Number.isNaN(minTime) && !Number.isNaN(maxTime) && minTime >= 0 && maxTime >= minTime
+  const min = isValid ? minTime : DEFAULT_MIN_TIME
+  const max = isValid ? maxTime : DEFAULT_MAX_TIME
+  const all = METHODS_MOCK.filter(
+    (method) => method.time_in_gb !== null && method.time_in_gb >= min && method.time_in_gb <= max,
+  )
+  const offset = (page - 1) * limit
 
-  const methods = METHODS_MOCK.filter(
-    (method) =>
-      method.time_in_gb !== null && method.time_in_gb >= minTime && method.time_in_gb <= maxTime,
-  ).map(withLocalMedia)
-  return { methods, min_time: minTime, max_time: maxTime }
+  return {
+    methods: all.slice(offset, offset + limit).map(withLocalMedia),
+    min_time: min,
+    max_time: max,
+    total: all.length,
+    page,
+    limit,
+  }
 }
 
 // null вместо ответов 400 и 404

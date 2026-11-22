@@ -32,6 +32,8 @@ export interface SerializerDraftResponse {
 export interface SerializerFeedMethod {
   created_by_current_user?: boolean;
   description?: string;
+  feed_position?: number;
+  feed_size?: number;
   id?: number;
   image_url?: string;
   is_liked?: boolean;
@@ -47,9 +49,12 @@ export interface SerializerFeedResponse {
 }
 
 export interface SerializerGridResponse {
+  limit?: number;
   max_time?: number;
   methods?: SerializerMigrationMethod[];
   min_time?: number;
+  page?: number;
+  total?: number;
 }
 
 export interface SerializerLikeResponse {
@@ -292,6 +297,16 @@ export class Api<
         min_time?: number;
         /** Максимальное время на 1 Гб */
         max_time?: number;
+        /**
+         * Номер страницы
+         * @default 1
+         */
+        page?: number;
+        /**
+         * Количество элементов на странице
+         * @default 10
+         */
+        limit?: number;
       },
       params: RequestParams = {},
     ) =>

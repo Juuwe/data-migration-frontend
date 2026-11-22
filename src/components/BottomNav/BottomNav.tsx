@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import { logoutRequest } from '../../modules/authApi'
 import { clearSession, getAccessToken } from '../../modules/authStorage'
+import { formatTimeParam } from '../../modules/filters'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
 import { clearDraft } from '../../slices/draftSlice'
@@ -24,7 +25,8 @@ export const BottomNav: FC = () => {
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
   const authLoading = useAppSelector((state) => state.user.loading)
   const filters = useAppSelector((state) => state.methods.filters)
-  const gridTo = `${ROUTES.GRID}?min_time=${filters.minTime}&max_time=${filters.maxTime}`
+  const gridPage = useAppSelector((state) => state.methods.grid.page)
+  const gridTo = `${ROUTES.GRID}?min_time=${formatTimeParam(filters.minTime)}&max_time=${formatTimeParam(filters.maxTime)}&page=${gridPage}`
 
   const items: NavItem[] = [
     {

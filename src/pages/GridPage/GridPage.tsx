@@ -3,14 +3,16 @@ import { Alert } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 
 import { MethodCard } from '../../components/MethodCard/MethodCard'
+import { Pagination } from '../../components/Pagination/Pagination'
 import { GridSkeleton } from '../../components/Skeletons/Skeletons'
 import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilter'
-import { MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
+import { formatTimeParam, MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../../modules/mock'
 import {
   deleteMethod,
   getMethods,
+  setCurrentPage,
   setFilters,
   setMaxTime,
   setMinTime,
@@ -30,28 +32,39 @@ const parseRange = (searchParams: URLSearchParams) => {
     Number.isFinite(maxTime) &&
     minTime >= SLIDER_MIN &&
     maxTime <= SLIDER_MAX &&
-    maxTime - minTime >= MIN_GAP
+    maxTime - minTime >= MIN_GAP - 1e-9
 
   return isValid
     ? { minTime, maxTime }
     : { minTime: DEFAULT_MIN_TIME, maxTime: DEFAULT_MAX_TIME }
 }
 
+const parsePage = (searchParams: URLSearchParams) => {
+  const page = Number.parseInt(searchParams.get('page') ?? '1', 10)
+  return Number.isInteger(page) && page > 0 ? page : 1
+}
+
 export const GridPage: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useAppSelector((state) => state.methods.filters)
-  const { methods, loading, loaded, query, error } = useAppSelector(
+  const { methods, loading, loaded, query, page, limit, total, error } = useAppSelector(
     (state) => state.methods.grid,
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
+  const totalPages = Math.max(1, Math.ceil(total / limit))
 
   useEffect(() => {
     const range = parseRange(searchParams)
+    const requestedPage = parsePage(searchParams)
     dispatch(setFilters(range))
+    dispatch(setCurrentPage(requestedPage))
 
     // Повторно не загружаем уже полученный список при возврате на вкладку.
-    const isCached = query?.minTime === range.minTime && query.maxTime === range.maxTime
+    const isCached =
+      query?.minTime === range.minTime &&
+      query.maxTime === range.maxTime &&
+      query.page === requestedPage
     if (!isCached) {
       dispatch(getMethods())
     }
@@ -59,8 +72,9 @@ export const GridPage: FC = () => {
 
   const handleSearch = () => {
     const nextParams = new URLSearchParams({
-      min_time: String(filters.minTime),
-      max_time: String(filters.maxTime),
+      min_time: formatTimeParam(filters.minTime),
+      max_time: formatTimeParam(filters.maxTime),
+      page: '1',
     })
 
     if (nextParams.toString() === searchParams.toString()) {
@@ -68,6 +82,14 @@ export const GridPage: FC = () => {
     } else {
       setSearchParams(nextParams)
     }
+  }
+
+  const handlePageChange = (nextPage: number) => {
+    setSearchParams({
+      min_time: formatTimeParam(filters.minTime),
+      max_time: formatTimeParam(filters.maxTime),
+      page: String(nextPage),
+    })
   }
 
   const handleDelete = async (id: number, title: string) => {
@@ -113,6 +135,13 @@ export const GridPage: FC = () => {
           <p className="no-data">Услуги миграции не найдены</p>
         )}
       </section>
+
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        disabled={loading}
+      />
     </>
   )
 }

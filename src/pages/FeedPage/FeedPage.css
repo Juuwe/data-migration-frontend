@@ -223,6 +223,22 @@
   text-align: center;
 }
 
+.feed-position {
+  position: absolute;
+  top: calc(18px + var(--safe-top));
+  right: 16px;
+  z-index: 5;
+  padding: 4px 8px;
+  color: #ffffff;
+  background: rgba(12, 18, 24, 0.68);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
 .feed-error-page {
   top: calc(90px + var(--safe-top));
   color: #b4232a;

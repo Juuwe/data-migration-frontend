@@ -6,7 +6,7 @@
   top: calc(140px + var(--safe-top));
   left: 0;
   right: 0;
-  bottom: calc(92px + var(--safe-bottom));
+  bottom: calc(144px + var(--safe-bottom));
   display: grid;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   align-content: start;
@@ -23,6 +23,15 @@
   margin: 0;
   font-size: 12px;
   border-radius: 8px;
+}
+
+.pagination-bar {
+  position: absolute;
+  right: 16px;
+  bottom: calc(92px + var(--safe-bottom));
+  left: 16px;
+  z-index: 4;
+  height: 34px;
 }
 
 @media (min-width: 700px) {

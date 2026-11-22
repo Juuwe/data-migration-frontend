@@ -1,0 +1,24 @@
+.pagination-bar {
+  margin: 0;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+
+.pagination-bar .page-link {
+  min-width: 28px;
+  padding: 4px 7px;
+  color: #35627f;
+  border-color: #d9e6f0;
+  font-size: 12px;
+  text-align: center;
+}
+
+.pagination-bar .page-item.active .page-link {
+  background: #2a9fff;
+  border-color: #2a9fff;
+}
+
+.pagination-bar .page-item.disabled .page-link {
+  color: #a5b4c2;
+}

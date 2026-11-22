@@ -17,4 +17,6 @@ export const toMigrationMethod = (method: SerializerMigrationMethod): MigrationM
 export const toFeedMethod = (method: SerializerFeedMethod): FeedMethod => ({
   ...toMigrationMethod(method),
   is_liked: method.is_liked ?? false,
+  feed_position: method.feed_position,
+  feed_size: method.feed_size,
 })
