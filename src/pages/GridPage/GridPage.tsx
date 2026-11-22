@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from 'react'
+import { useEffect, useEffectEvent, useState, type FC } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { MethodCard } from '../../components/MethodCard/MethodCard'
 import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilter'
@@ -27,7 +27,7 @@ export const GridPage: FC = () => {
   const handleSearch = () => {
     setSearchParams({ min_time: String(minTime), max_time: String(maxTime) })
   }
-
+  
   return (
     <>
       <TimeRangeFilter

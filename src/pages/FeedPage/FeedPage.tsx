@@ -21,7 +21,7 @@ export const FeedPage: FC = () => {
   if (!method) return null
 
   const expanded = expandedId === method.id
-
+  
   return (
     <>
       <div className="media-container">
