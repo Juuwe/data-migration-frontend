@@ -81,6 +81,8 @@ npm run serve:https
 
 Workflow `.github/workflows/deploy-pages.yml` собирает приложение с `GITHUB_PAGES=true` и `VITE_STATIC_MODE=true` и публикует `dist` через GitHub Actions. Адрес: <https://juuwe.github.io/data-migration-frontend/>.
 
+Перед первым запуском в настройках репозитория нужно выбрать `Settings → Pages → Build and deployment → Source: GitHub Actions`. После этого workflow запускается при push в `react-spa-pwa-deploy` или вручную через `workflow_dispatch`.
+
 На GitHub Pages нет бэкенда и MinIO, поэтому:
 
 - гость получает данные только из mock-коллекции;
