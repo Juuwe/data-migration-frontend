@@ -28,12 +28,24 @@ node "Ноутбук в локальной сети" as Laptop {
   database "MinIO S3\n:9010" as MinIO
 }
 
+
+node "Компьютер с Tauri build" as TauriHost {
+  component "Tauri 2.x WebView\nгостевой клиент\n(локальный порт, например 60531)" as TauriApp
+}
+
+cloud "Hugging Face" as HF {
+  component "CLIP / transformers.js\nмодель CLIP" as Model
+}
+
 cloud "GitHub" {
   node "GitHub Actions" as CI
   node "GitHub Pages\nHTTPS, mock-режим" as Pages
 }
 
 PWA --> Proxy : HTTPS
+TauriApp --> API : HTTP /api по LAN IP
+TauriApp --> MinIO : HTTP /s3 по LAN IP
+TauriApp ..> Model : HTTPS, загрузка модели
 PWA --> Pages : HTTPS
 PWA ..> SW : офлайн-кэш
 SW ..> Static : precache
@@ -53,6 +65,12 @@ CI --> Pages : deploy dist
 note right of Pages
   GitHub Pages работает только
   с mock-коллекцией (VITE_STATIC_MODE)
+end note
+
+note bottom of TauriApp
+  Tauri build не использует Vite-прокси:
+  API и MinIO задаются IP-адресом
+  в src/modules/tauriConfig.ts
 end note
 
 @enduml

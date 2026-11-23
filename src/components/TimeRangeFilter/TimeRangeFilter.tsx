@@ -13,6 +13,8 @@ interface Props {
   setMaxTime: (value: number) => void
   onSubmit: () => void
   loading?: boolean
+  onImageSearch?: () => void
+  imageSearchCount?: number | null
 }
 
 const formatNumber = (value: number) => Number.parseFloat(value.toFixed(2)).toString()
@@ -27,6 +29,8 @@ export const TimeRangeFilter: FC<Props> = ({
   setMaxTime,
   onSubmit,
   loading = false,
+  onImageSearch,
+  imageSearchCount = null,
 }) => (
   <>
     <form
@@ -39,9 +43,17 @@ export const TimeRangeFilter: FC<Props> = ({
     >
       <div className="filter-header">
         <span className="filter-label">Время за Гб (сек)</span>
-        <span className="filter-value">
-          {formatNumber(minTime)} — {formatNumber(maxTime)} cек/Гб
-        </span>
+        <div className="filter-header-actions">
+          <span className="filter-value">
+            {formatNumber(minTime)} — {formatNumber(maxTime)} cек/Гб
+          </span>
+          {onImageSearch ? (
+            <button type="button" className="filter-photo-btn" onClick={onImageSearch}>
+              <i className="bi bi-camera" aria-hidden="true"></i>
+              {imageSearchCount !== null ? ` Фото: ${imageSearchCount}` : ' Фото'}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="range-slider-container">

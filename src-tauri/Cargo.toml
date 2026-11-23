@@ -1,0 +1,18 @@
+[package]
+name = "data-migration-native"
+version = "0.1.0"
+description = "Native guest client for the data migration catalog"
+authors = ["Juuwe"]
+edition = "2021"
+
+[lib]
+name = "data_migration_native_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

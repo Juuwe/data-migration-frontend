@@ -12,6 +12,7 @@ interface Props {
   image_url: string
   likes_count: number
   time_in_gb: number | null
+  score?: number
   onDelete?: () => void
 }
 
@@ -21,6 +22,7 @@ export const MethodCard: FC<Props> = ({
   image_url,
   likes_count,
   time_in_gb,
+  score,
   onDelete,
 }) => (
   <Card as="article" className="service-card">
@@ -39,6 +41,9 @@ export const MethodCard: FC<Props> = ({
           <i className="bi bi-heart-fill card-like-icon"></i>
           <span>{likes_count}</span>
         </div>
+        {score !== undefined ? (
+          <div className="card-score-badge">{(score * 100).toFixed(0)}%</div>
+        ) : null}
       </div>
       <h3 className="card-title">{title}</h3>
     </Link>

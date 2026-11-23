@@ -4,6 +4,7 @@ import { api } from '../api'
 import { toFeedMethod, toMigrationMethod } from '../modules/adapters'
 import { getRequestErrorMessage, isBackendUnavailable } from '../modules/apiError'
 import { IS_STATIC_MODE } from '../modules/env'
+import { IS_TAURI } from '../modules/tauriConfig'
 import { getMockFeedMethod, getMockMethods } from '../modules/methodsApi'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../modules/mock'
 import type { FeedMethod, GridResponse, MigrationMethod } from '../modules/types'
@@ -65,7 +66,7 @@ export const getMethods = createAsyncThunk<
   const { page, limit } = grid
 
   // GitHub Pages работает без бэкенда: гость получает только mock-коллекцию.
-  if (IS_STATIC_MODE && !user.isAuthenticated) {
+  if (!IS_TAURI && IS_STATIC_MODE && !user.isAuthenticated) {
     return getMockMethods(filters.minTime, filters.maxTime, page, limit)
   }
 
@@ -88,7 +89,7 @@ export const getMethods = createAsyncThunk<
     }
   } catch (error) {
     // Mock-коллекция доступна только гостю и только при недоступном бэкенде.
-    if (!user.isAuthenticated && isBackendUnavailable(error)) {
+    if (!IS_TAURI && !user.isAuthenticated && isBackendUnavailable(error)) {
       return getMockMethods(filters.minTime, filters.maxTime, page, limit)
     }
     return rejectWithValue(getRequestErrorMessage(error, 'Не удалось загрузить услуги'))
@@ -110,7 +111,7 @@ export const getFeedMethod = createAsyncThunk<
     return rejectWithValue('Некорректный id услуги')
   }
 
-  if (IS_STATIC_MODE && !user.isAuthenticated) {
+  if (!IS_TAURI && IS_STATIC_MODE && !user.isAuthenticated) {
     return getMockFeedMethod(id, next)?.method ?? null
   }
 
@@ -121,7 +122,7 @@ export const getFeedMethod = createAsyncThunk<
     })
     return response.data.method ? toFeedMethod(response.data.method) : null
   } catch (error) {
-    if (!user.isAuthenticated && isBackendUnavailable(error)) {
+    if (!IS_TAURI && !user.isAuthenticated && isBackendUnavailable(error)) {
       return getMockFeedMethod(id, next)?.method ?? null
     }
     return rejectWithValue(getRequestErrorMessage(error, 'Не удалось загрузить услугу'))

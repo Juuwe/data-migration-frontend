@@ -1,4 +1,5 @@
 import { IS_STATIC_MODE } from './env'
+import { IS_TAURI, TAURI_S3_BASE } from './tauriConfig'
 
 const BASE_URL = import.meta.env.BASE_URL
 
@@ -11,6 +12,15 @@ const MINIO_URL = import.meta.env.VITE_MINIO_URL ?? 'http://localhost:9010'
 const resolveMediaProxyUrl = (url: string | null | undefined, fallback: string): string => {
   if (!url || url.startsWith('/static/')) {
     return fallback
+  }
+
+  if (IS_TAURI) {
+    const prefixes = [MINIO_URL, 'http://localhost:9010', 'http://127.0.0.1:9010']
+    const prefix = prefixes.find((value) => url.startsWith(value))
+    if (prefix) {
+      return `${TAURI_S3_BASE}${url.slice(prefix.length)}`
+    }
+    return url
   }
 
   if (url.startsWith(MINIO_URL)) {

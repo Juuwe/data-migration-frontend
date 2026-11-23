@@ -124,3 +124,15 @@
 .card-delete-btn:hover {
   background: #ffe1e4;
 }
+
+.card-score-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  color: #ffffff;
+  background: rgba(31, 111, 67, 0.9);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}

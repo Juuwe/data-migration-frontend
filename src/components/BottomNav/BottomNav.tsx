@@ -6,6 +6,7 @@ import { clearSession, getAccessToken } from '../../modules/authStorage'
 import { formatTimeParam } from '../../modules/filters'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES, ROUTE_LABELS } from '../../Routes'
+import { IS_TAURI } from '../../modules/tauriConfig'
 import { clearDraft } from '../../slices/draftSlice'
 import { resetFeed, resetFilters } from '../../slices/methodsSlice'
 import { clearUser, setAuthLoading } from '../../slices/userSlice'
@@ -35,12 +36,16 @@ export const BottomNav: FC = () => {
       to: ROUTES.FEED,
       active: location.pathname === ROUTES.FEED,
     },
-    {
-      key: 'ADD',
-      icon: 'bi-plus-square',
-      to: isAuthenticated ? ROUTES.ADD : ROUTES.LOGIN,
-      active: location.pathname === ROUTES.ADD,
-    },
+    ...(!IS_TAURI
+      ? [
+          {
+            key: 'ADD' as const,
+            icon: 'bi-plus-square',
+            to: isAuthenticated ? ROUTES.ADD : ROUTES.LOGIN,
+            active: location.pathname === ROUTES.ADD,
+          },
+        ]
+      : []),
     {
       key: 'GRID',
       icon: 'bi-grid',
@@ -49,7 +54,7 @@ export const BottomNav: FC = () => {
     },
   ]
 
-  if (!isAuthenticated) {
+  if (!IS_TAURI && !isAuthenticated) {
     items.push({
       key: 'LOGIN',
       icon: 'bi-box-arrow-in-right',

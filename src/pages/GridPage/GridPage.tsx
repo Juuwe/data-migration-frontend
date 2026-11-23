@@ -1,12 +1,14 @@
-import { useEffect, type FC } from 'react'
-import { Alert } from 'react-bootstrap'
+import { useEffect, useState, type FC } from 'react'
+import { Alert, Modal } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 
 import { MethodCard } from '../../components/MethodCard/MethodCard'
 import { Pagination } from '../../components/Pagination/Pagination'
 import { GridSkeleton } from '../../components/Skeletons/Skeletons'
+import { ImageSearch } from '../../components/ImageSearch/ImageSearch'
 import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilter'
 import { formatTimeParam, MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
+import { useServiceImageSearch } from '../../hooks/useServiceImageSearch'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../../modules/mock'
 import {
@@ -53,6 +55,10 @@ export const GridPage: FC = () => {
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
   const totalPages = Math.max(1, Math.ceil(total / limit))
+  const [isImageSearchOpen, setIsImageSearchOpen] = useState(false)
+  const imageSearch = useServiceImageSearch(methods)
+  const isImageSearchActive = Boolean(imageSearch.imageEmbedding)
+  const visibleMethods = isImageSearchActive ? imageSearch.results : methods
 
   useEffect(() => {
     const range = parseRange(searchParams)
@@ -112,18 +118,45 @@ export const GridPage: FC = () => {
         setMaxTime={(value) => dispatch(setMaxTime(value))}
         onSubmit={handleSearch}
         loading={loading}
+        onImageSearch={() => setIsImageSearchOpen(true)}
+        imageSearchCount={isImageSearchActive ? imageSearch.results.length : null}
       />
+
+      <Modal
+        show={isImageSearchOpen}
+        onHide={() => setIsImageSearchOpen(false)}
+        centered
+        size="lg"
+        contentClassName="image-search-modal"
+      >
+        <Modal.Body>
+          <ImageSearch
+            ready={imageSearch.ready}
+            progress={imageSearch.progress}
+            imageUrl={imageSearch.imageUrl}
+            threshold={imageSearch.threshold}
+            topK={imageSearch.topK}
+            resultCount={isImageSearchActive ? imageSearch.results.length : null}
+            error={imageSearch.error}
+            onImage={imageSearch.searchByImage}
+            onReset={imageSearch.resetSearch}
+            onThreshold={imageSearch.setThreshold}
+            onTopK={imageSearch.setTopK}
+          />
+        </Modal.Body>
+      </Modal>
 
       <section className="cards-grid" aria-busy={loading}>
         {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
 
         {!loaded ? (
           <GridSkeleton />
-        ) : methods.length ? (
-          methods.map((method) => (
+        ) : visibleMethods.length ? (
+          visibleMethods.map((method) => (
             <MethodCard
               key={method.id}
               {...method}
+              score={'score' in method && typeof method.score === 'number' ? method.score : undefined}
               onDelete={
                 isAuthenticated && method.created_by_current_user
                   ? () => handleDelete(method.id, method.title)
@@ -132,16 +165,22 @@ export const GridPage: FC = () => {
             />
           ))
         ) : (
-          <p className="no-data">Услуги миграции не найдены</p>
+          <p className="no-data">
+            {isImageSearchActive
+              ? 'По изображению ничего не найдено. Уменьшите порог сходства.'
+              : 'Услуги миграции не найдены'}
+          </p>
         )}
       </section>
 
-      <Pagination
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        disabled={loading}
-      />
+      {!isImageSearchActive ? (
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+          disabled={loading}
+        />
+      ) : null}
     </>
   )
 }

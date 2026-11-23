@@ -6,6 +6,7 @@ import { DEFAULT_VIDEO, resolveVideoUrl } from '../../modules/media'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
 import { ROUTES } from '../../Routes'
 import { getFeedMethod, setMethodLike } from '../../slices/methodsSlice'
+import { IS_TAURI } from '../../modules/tauriConfig'
 import './FeedPage.css'
 
 export const FeedPage: FC = () => {
@@ -88,19 +89,21 @@ export const FeedPage: FC = () => {
       </div>
 
       <div className="action-buttons-group">
-        <div className="action-item">
-          <button
-            type="button"
-            className={`circle-btn like-btn ${method.is_liked ? 'is-liked' : ''}`}
-            aria-label={method.is_liked ? 'Снять лайк' : 'Нравится'}
-            aria-pressed={method.is_liked}
-            disabled={loading}
-            onClick={handleLike}
-          >
-            <i className={`bi ${method.is_liked ? 'bi-heart-fill' : 'bi-heart'} action-icon`}></i>
-          </button>
-          <span className="action-label">{method.likes_count}</span>
-        </div>
+        {!IS_TAURI ? (
+          <div className="action-item">
+            <button
+              type="button"
+              className={`circle-btn like-btn ${method.is_liked ? 'is-liked' : ''}`}
+              aria-label={method.is_liked ? 'Снять лайк' : 'Нравится'}
+              aria-pressed={method.is_liked}
+              disabled={loading}
+              onClick={handleLike}
+            >
+              <i className={`bi ${method.is_liked ? 'bi-heart-fill' : 'bi-heart'} action-icon`}></i>
+            </button>
+            <span className="action-label">{method.likes_count}</span>
+          </div>
+        ) : null}
 
         <div className="action-item">
           {loading ? (
