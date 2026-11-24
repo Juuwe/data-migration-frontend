@@ -1,5 +1,5 @@
-import { useEffect, useState, type FC } from 'react'
-import { Alert, Modal } from 'react-bootstrap'
+import { useEffect, type FC } from 'react'
+import { Alert } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 
 import { MethodCard } from '../../components/MethodCard/MethodCard'
@@ -54,7 +54,6 @@ export const GridPage: FC = () => {
     (state) => state.methods.grid,
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
-  const [isImageSearchOpen, setIsImageSearchOpen] = useState(false)
   const imageSearch = useServiceImageSearch(methods)
   const isImageSearchActive = Boolean(imageSearch.imageEmbedding)
   const visibleMethods = isImageSearchActive ? imageSearch.results : methods
@@ -109,41 +108,31 @@ export const GridPage: FC = () => {
   }
 
   return (
-    <>
-      <TimeRangeFilter
-        minTime={filters.minTime}
-        maxTime={filters.maxTime}
-        setMinTime={(value) => dispatch(setMinTime(value))}
-        setMaxTime={(value) => dispatch(setMaxTime(value))}
-        onSubmit={handleSearch}
-        loading={loading}
-        onImageSearch={() => setIsImageSearchOpen(true)}
-        imageSearchCount={isImageSearchActive ? imageSearch.results.length : null}
-      />
+    <div className="grid-page">
+      <div className="grid-controls">
+        <TimeRangeFilter
+          minTime={filters.minTime}
+          maxTime={filters.maxTime}
+          setMinTime={(value) => dispatch(setMinTime(value))}
+          setMaxTime={(value) => dispatch(setMaxTime(value))}
+          onSubmit={handleSearch}
+          loading={loading}
+        />
 
-      <Modal
-        show={isImageSearchOpen}
-        onHide={() => setIsImageSearchOpen(false)}
-        centered
-        size="lg"
-        contentClassName="image-search-modal"
-      >
-        <Modal.Body>
-          <ImageSearch
-            ready={imageSearch.ready}
-            progress={imageSearch.progress}
-            imageUrl={imageSearch.imageUrl}
-            threshold={imageSearch.threshold}
-            topK={imageSearch.topK}
-            resultCount={isImageSearchActive ? imageSearch.results.length : null}
-            error={imageSearch.error}
-            onImage={imageSearch.searchByImage}
-            onReset={imageSearch.resetSearch}
-            onThreshold={imageSearch.setThreshold}
-            onTopK={imageSearch.setTopK}
-          />
-        </Modal.Body>
-      </Modal>
+        <ImageSearch
+          ready={imageSearch.ready}
+          progress={imageSearch.progress}
+          imageUrl={imageSearch.imageUrl}
+          threshold={imageSearch.threshold}
+          topK={imageSearch.topK}
+          resultCount={isImageSearchActive ? imageSearch.results.length : null}
+          error={imageSearch.error}
+          onImage={imageSearch.searchByImage}
+          onReset={imageSearch.resetSearch}
+          onThreshold={imageSearch.setThreshold}
+          onTopK={imageSearch.setTopK}
+        />
+      </div>
 
       <section className="cards-grid" aria-busy={loading}>
         {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
@@ -180,6 +169,6 @@ export const GridPage: FC = () => {
           disabled={loading}
         />
       ) : null}
-    </>
+    </div>
   )
 }

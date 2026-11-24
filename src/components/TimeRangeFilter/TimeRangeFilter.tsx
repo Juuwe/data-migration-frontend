@@ -13,8 +13,6 @@ interface Props {
   setMaxTime: (value: number) => void
   onSubmit: () => void
   loading?: boolean
-  onImageSearch?: () => void
-  imageSearchCount?: number | null
 }
 
 const formatNumber = (value: number) => Number.parseFloat(value.toFixed(2)).toString()
@@ -29,70 +27,58 @@ export const TimeRangeFilter: FC<Props> = ({
   setMaxTime,
   onSubmit,
   loading = false,
-  onImageSearch,
-  imageSearchCount = null,
 }) => (
-  <>
-    <form
-      id="filter-form"
-      className="filter-section"
-      onSubmit={(event) => {
-        event.preventDefault()
-        if (!loading) onSubmit()
-      }}
-    >
-      <div className="filter-header">
-        <span className="filter-label">Время за Гб (сек)</span>
-        <div className="filter-header-actions">
-          <span className="filter-value">
-            {formatNumber(minTime)} — {formatNumber(maxTime)} cек/Гб
-          </span>
-          {onImageSearch ? (
-            <button type="button" className="filter-photo-btn" onClick={onImageSearch}>
-              <i className="bi bi-camera" aria-hidden="true"></i>
-              {imageSearchCount !== null ? ` Фото: ${imageSearchCount}` : ' Фото'}
-            </button>
-          ) : null}
-        </div>
-      </div>
+  <form
+    id="filter-form"
+    className="control-card filter-card"
+    onSubmit={(event) => {
+      event.preventDefault()
+      if (!loading) onSubmit()
+    }}
+  >
+    <div className="control-card-head">
+      <span className="control-card-title">Время за Гб (сек)</span>
+      <span className="filter-value">
+        {formatNumber(minTime)} — {formatNumber(maxTime)} сек/Гб
+      </span>
+    </div>
 
-      <div className="range-slider-container">
-        <div className="range-track-bg"></div>
-        <div
-          className="range-track-active"
-          style={{
-            left: trackPosition(minTime),
-            width: `calc(${trackPosition(maxTime)} - ${trackPosition(minTime)})`,
-          }}
-          aria-hidden="true"
-        ></div>
-        <input
-          type="range"
-          name="min_time"
-          min={SLIDER_MIN}
-          max={SLIDER_MAX}
-          step="0.01"
-          value={minTime}
-          className="range-input"
-          disabled={loading}
-          onChange={(event) => setMinTime(Math.min(Number(event.target.value), maxTime - MIN_GAP))}
-        />
-        <input
-          type="range"
-          name="max_time"
-          min={SLIDER_MIN}
-          max={SLIDER_MAX}
-          step="0.01"
-          value={maxTime}
-          className="range-input"
-          disabled={loading}
-          onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
-        />
-      </div>
-    </form>
+    <div className="range-slider-container">
+      <div className="range-track-bg"></div>
+      <div
+        className="range-track-active"
+        style={{
+          left: trackPosition(minTime),
+          width: `calc(${trackPosition(maxTime)} - ${trackPosition(minTime)})`,
+        }}
+        aria-hidden="true"
+      ></div>
+      <input
+        type="range"
+        name="min_time"
+        min={SLIDER_MIN}
+        max={SLIDER_MAX}
+        step="0.01"
+        value={minTime}
+        className="range-input"
+        disabled={loading}
+        onChange={(event) => setMinTime(Math.min(Number(event.target.value), maxTime - MIN_GAP))}
+      />
+      <input
+        type="range"
+        name="max_time"
+        min={SLIDER_MIN}
+        max={SLIDER_MAX}
+        step="0.01"
+        value={maxTime}
+        className="range-input"
+        disabled={loading}
+        onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
+      />
+    </div>
 
-    <Button className="search-btn" type="submit" form="filter-form" disabled={loading}>
+    <Button className="filter-submit" type="submit" form="filter-form" disabled={loading}>
       Найти
     </Button>
-  </>
+  </form>
 )

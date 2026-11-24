@@ -36,60 +36,52 @@ export const ImageSearch: FC<Props> = ({
     if (file) onImage(file)
   }
 
-  return (
-    <section className="image-search" aria-label="Поиск услуг по изображению">
-      <div className="image-search-head">
-        <div>
-          <h2 className="image-search-title">Поиск по изображению</h2>
-          <p className="image-search-subtitle">
-            CLIP-модель сравнит картинку с английскими описаниями услуг
-          </p>
-        </div>
+  const pickFile = () => inputRef.current?.click()
 
-        <div className="image-search-actions">
-          <input
-            ref={inputRef}
-            type="file"
-            accept="image/*"
-            className="image-search-input"
-            onChange={handleFile}
-          />
-          <button
-            type="button"
-            className="image-search-button"
-            disabled={!ready}
-            onClick={() => inputRef.current?.click()}
-          >
-            {ready ? 'Загрузить фото' : `Загрузка модели ${progress}%`}
+  return (
+    <section className="control-card image-search" aria-label="Поиск услуг по изображению">
+      <div className="control-card-head">
+        <span className="control-card-title">
+          <i className="bi bi-camera" aria-hidden="true"></i>
+          Поиск по фото
+        </span>
+        {imageUrl ? (
+          <button type="button" className="image-search-reset" onClick={onReset}>
+            Сбросить
           </button>
-          {imageUrl ? (
-            <button type="button" className="image-search-reset" onClick={onReset}>
-              Сбросить
-            </button>
-          ) : null}
-        </div>
+        ) : null}
       </div>
 
-      {!ready ? (
-        <div className="image-search-progress" aria-label="Загрузка модели">
-          <span style={{ width: `${progress}%` }} />
-        </div>
-      ) : null}
-
-      {error ? <p className="image-search-error">{error}</p> : null}
-
       <div className="image-search-body">
-        <div className="image-search-preview">
+        <button
+          type="button"
+          className="image-search-preview"
+          onClick={pickFile}
+          disabled={!ready}
+          aria-label="Загрузить изображение для поиска"
+        >
           {imageUrl ? (
             <img src={imageUrl} alt="Изображение для поиска" />
           ) : (
-            <span>Нет фото</span>
+            <span className="image-search-preview-empty">
+              <i className="bi bi-image" aria-hidden="true"></i>
+              Фото
+            </span>
           )}
-        </div>
+        </button>
 
         <div className="image-search-controls">
+          <button
+            type="button"
+            className="image-search-upload"
+            disabled={!ready}
+            onClick={pickFile}
+          >
+            {ready ? 'Загрузить фото' : `Модель ${progress}%`}
+          </button>
+
           <label>
-            Порог сходства: <strong>{threshold.toFixed(2)}</strong>
+            <span>Порог</span>
             <input
               type="range"
               min="0.4"
@@ -98,10 +90,11 @@ export const ImageSearch: FC<Props> = ({
               value={threshold}
               onChange={(event) => onThreshold(Number(event.target.value))}
             />
+            <strong>{threshold.toFixed(2)}</strong>
           </label>
 
           <label>
-            TopK: <strong>{topK}</strong>
+            <span>TopK</span>
             <input
               type="number"
               min="1"
@@ -115,7 +108,23 @@ export const ImageSearch: FC<Props> = ({
             <p className="image-search-count">Найдено: {resultCount}</p>
           ) : null}
         </div>
+
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className="image-search-input"
+          onChange={handleFile}
+        />
       </div>
+
+      {!ready ? (
+        <div className="image-search-progress" aria-label="Загрузка модели">
+          <span style={{ width: `${progress}%` }} />
+        </div>
+      ) : null}
+
+      {error ? <p className="image-search-error">{error}</p> : null}
     </section>
   )
 }

@@ -1,107 +1,37 @@
 .image-search {
-  margin: 0 auto 18px;
-  width: min(100%, 760px);
-  padding: 16px;
-  border: 1px solid rgba(24, 39, 58, 0.1);
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(24, 39, 58, 0.06);
+  gap: 10px;
 }
 
-.image-search-head {
+.image-search-body {
   display: flex;
-  gap: 16px;
+  gap: 10px;
   align-items: flex-start;
-  justify-content: space-between;
-}
-
-.image-search-title {
-  margin: 0;
-  font-size: 1.05rem;
-}
-
-.image-search-subtitle {
-  margin: 4px 0 0;
-  color: #6c7a8d;
-  font-size: 0.82rem;
-}
-
-.image-search-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
+  min-width: 0;
 }
 
 .image-search-input {
   display: none;
 }
 
-.image-search-button,
-.image-search-reset {
-  border: 0;
-  border-radius: 10px;
-  padding: 9px 12px;
-  font-size: 0.82rem;
+.image-search-preview {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  overflow: hidden;
+  color: #8d9aab;
+  background: #f6f9fd;
+  border: 1px dashed #c8d3e0;
+  border-radius: 12px;
   cursor: pointer;
 }
 
-.image-search-button {
-  background: #2a9fff;
-  color: #ffffff;
-}
-
-.image-search-button:disabled {
-  background: #b9c6d5;
+.image-search-preview:disabled {
   cursor: wait;
-}
-
-.image-search-reset {
-  background: #eef3f9;
-  color: #31445c;
-}
-
-.image-search-progress {
-  height: 5px;
-  margin-top: 12px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #edf2f8;
-}
-
-.image-search-progress span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: #2a9fff;
-  transition: width 0.2s ease;
-}
-
-.image-search-error {
-  margin: 10px 0 0;
-  color: #b42318;
-  font-size: 0.82rem;
-}
-
-.image-search-body {
-  display: flex;
-  gap: 16px;
-  margin-top: 14px;
-}
-
-.image-search-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 112px;
-  height: 112px;
-  flex: 0 0 auto;
-  overflow: hidden;
-  border: 1px dashed #c8d3e0;
-  border-radius: 14px;
-  background: #f6f9fd;
-  color: #8d9aab;
-  font-size: 0.8rem;
+  opacity: 0.6;
 }
 
 .image-search-preview img {
@@ -110,57 +40,118 @@
   object-fit: cover;
 }
 
+.image-search-preview-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.image-search-preview-empty .bi {
+  font-size: 16px;
+}
+
 .image-search-controls {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px 20px;
-  align-items: flex-start;
-  font-size: 0.82rem;
+  flex: 1;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
   color: #31445c;
+  font-size: 11px;
+}
+
+.image-search-upload {
+  align-self: flex-start;
+  padding: 6px 10px;
+  color: #1f5f99;
+  background: #eaf5ff;
+  border: 1px solid #cfe8ff;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.image-search-upload:hover:not(:disabled) {
+  background: #d9edff;
+}
+
+.image-search-upload:disabled {
+  cursor: wait;
+  opacity: 0.6;
 }
 
 .image-search-controls label {
   display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.image-search-controls input[type='range'] {
-  width: 180px;
-}
-
-.image-search-controls input[type='number'] {
-  width: 80px;
-  padding: 5px 8px;
-  border: 1px solid #c8d3e0;
-  border-radius: 8px;
-}
-
-.image-search-count {
-  width: 100%;
-  margin: 0;
-  color: #1f6f43;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 600;
 }
 
-@media (max-width: 620px) {
-  .image-search-head {
-    flex-direction: column;
-  }
-
-  .image-search-actions {
-    justify-content: flex-start;
-  }
-
-  .image-search-body {
-    flex-direction: column;
-  }
+.image-search-controls label > span {
+  flex: 0 0 auto;
 }
 
-.image-search-modal .image-search {
-  width: 100%;
+.image-search-controls strong {
+  flex: 0 0 30px;
+  font-size: 11px;
+  text-align: right;
+}
+
+.image-search-controls input[type='range'] {
+  flex: 1;
+  min-width: 0;
+  accent-color: #2a9fff;
+}
+
+.image-search-controls input[type='number'] {
+  width: 52px;
+  padding: 3px 6px;
+  background: #ffffff;
+  border: 1px solid #c8d3e0;
+  border-radius: 7px;
+  font: inherit;
+}
+
+.image-search-count {
   margin: 0;
+  color: #1f6f43;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.image-search-reset {
   padding: 0;
+  color: #1f5f99;
+  background: none;
   border: 0;
-  box-shadow: none;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.image-search-progress {
+  height: 4px;
+  overflow: hidden;
+  background: #edf2f8;
+  border-radius: 999px;
+}
+
+.image-search-progress span {
+  display: block;
+  height: 100%;
+  background: #2a9fff;
+  transition: width 0.2s ease;
+}
+
+.image-search-error {
+  margin: 0;
+  color: #b42318;
+  font-size: 11px;
 }

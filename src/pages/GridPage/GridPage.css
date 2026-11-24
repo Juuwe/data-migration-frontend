@@ -1,20 +1,33 @@
-.cards-grid {
+.grid-page {
   --grid-columns: 2;
   --card-media-height: 186px;
 
   position: absolute;
-  top: calc(140px + var(--safe-top));
-  left: 0;
-  right: 0;
-  bottom: calc(144px + var(--safe-bottom));
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: calc(16px + var(--safe-top)) 16px calc(129px + var(--safe-bottom));
+}
+
+.grid-controls {
   display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.cards-grid {
+  display: grid;
+  flex: 1;
   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
   align-content: start;
   gap: 12px;
-  padding: 0 16px 8px 16px;
+  min-height: 0;
+  padding: 2px 0 4px;
   overflow-x: hidden;
   overflow-y: auto;
-  z-index: 4;
 }
 
 .grid-alert {
@@ -26,30 +39,35 @@
 }
 
 .pagination-bar {
-  position: absolute;
-  right: 16px;
-  bottom: calc(92px + var(--safe-bottom));
-  left: 16px;
-  z-index: 4;
+  flex: 0 0 auto;
   height: 34px;
 }
 
 @media (min-width: 700px) {
-  .cards-grid {
+  .grid-page {
     --grid-columns: 3;
     --card-media-height: 210px;
 
-    top: calc(148px + var(--safe-top));
+    gap: 12px;
+    padding: calc(20px + var(--safe-top)) 20px calc(129px + var(--safe-bottom));
+  }
+
+  .grid-controls {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .cards-grid {
     gap: 16px;
-    padding: 0 20px 12px;
   }
 }
 
 @media (min-width: 1000px) {
-  .cards-grid {
+  .grid-page {
     --grid-columns: 4;
     --card-media-height: 230px;
 
-    padding: 0 24px 16px;
+    padding-right: 24px;
+    padding-left: 24px;
   }
 }
