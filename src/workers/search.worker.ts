@@ -10,7 +10,8 @@ import {
 } from '@huggingface/transformers'
 
 const LOCAL_MODEL_PATH = import.meta.env.VITE_LOCAL_MODEL_PATH as string | undefined
-const MODEL_ID = (import.meta.env.VITE_AI_MODEL_ID as string | undefined) ?? 'Xenova/mobileclip_s0'
+const MODEL_ID =
+  (import.meta.env.VITE_AI_MODEL_ID as string | undefined) ?? 'Xenova/siglip-base-patch16-224'
 const IS_SIGLIP = MODEL_ID.toLowerCase().includes('siglip')
 
 // Для офлайн-демонстрации можно положить модель в public/models и задать

@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' http://192.168.1.96:9010 data: blob:; media-src 'self' http://192.168.1.96:9010 data: blob:; connect-src 'self' http://192.168.1.96:8081 https://*.huggingface.co https://*.hf.co; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:;"
+      "csp": "default-src 'self'; img-src 'self' http://192.168.1.96:9010 data: blob:; media-src 'self' http://192.168.1.96:9010 data: blob:; connect-src 'self' http://192.168.1.96:8081 https://huggingface.co https://*.huggingface.co https://*.hf.co; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:;"
     }
   },
   "bundle": {
