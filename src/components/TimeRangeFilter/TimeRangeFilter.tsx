@@ -1,5 +1,4 @@
 import type { FC } from 'react'
-import { Button } from 'react-bootstrap'
 
 import { MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
 import './TimeRangeFilter.css'
@@ -76,9 +75,5 @@ export const TimeRangeFilter: FC<Props> = ({
         onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
       />
     </div>
-
-    <Button className="filter-submit" type="submit" form="filter-form" disabled={loading}>
-      Найти
-    </Button>
   </form>
 )

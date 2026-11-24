@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent, type FC } from 'react'
 
-import { Button } from 'react-bootstrap'
-
 import './ImageSearch.css'
 
 const TRACK_OFFSET = 19
@@ -21,7 +19,7 @@ interface Props {
   topK: number
   resultCount: number | null
   error: string | null
-  onImage: (file: File) => void
+  onFile: (file: File | null) => void
   onReset: () => void
   onThreshold: (value: number) => void
   onTopK: (value: number) => void
@@ -35,45 +33,42 @@ export const ImageSearch: FC<Props> = ({
   topK,
   resultCount,
   error,
-  onImage,
+  onFile,
   onReset,
   onThreshold,
   onTopK,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [file, setFile] = useState<File | null>(null)
+  const previewUrlRef = useRef<string | null>(null)
   const [localUrl, setLocalUrl] = useState<string | null>(null)
 
   useEffect(
     () => () => {
-      if (localUrl) URL.revokeObjectURL(localUrl)
+      if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
     },
-    [localUrl],
+    [],
   )
 
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
     const next = event.target.files?.[0]
     if (!next) return
 
-    setFile(next)
-    setLocalUrl((previous) => {
-      if (previous) URL.revokeObjectURL(previous)
-      return URL.createObjectURL(next)
-    })
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
+    const url = URL.createObjectURL(next)
+    previewUrlRef.current = url
+    setLocalUrl(url)
+    onFile(next)
   }
 
   const pickFile = () => inputRef.current?.click()
 
-  const handleSearch = () => {
-    if (file) onImage(file)
-  }
-
   const handleReset = () => {
-    setFile(null)
-    setLocalUrl((previous) => {
-      if (previous) URL.revokeObjectURL(previous)
-      return null
-    })
+    if (previewUrlRef.current) {
+      URL.revokeObjectURL(previewUrlRef.current)
+      previewUrlRef.current = null
+    }
+    setLocalUrl(null)
+    onFile(null)
     if (inputRef.current) inputRef.current.value = ''
     onReset()
   }
@@ -150,19 +145,9 @@ export const ImageSearch: FC<Props> = ({
         </label>
       </div>
 
-      <div className="image-search-actions">
-        <Button
-          className="filter-submit image-search-submit"
-          type="button"
-          onClick={handleSearch}
-          disabled={!ready || !file}
-        >
-          Найти
-        </Button>
-        {resultCount !== null ? (
-          <span className="image-search-count">Найдено: {resultCount}</span>
-        ) : null}
-      </div>
+      {resultCount !== null ? (
+        <p className="image-search-count">Найдено: {resultCount}</p>
+      ) : null}
 
       <input
         ref={inputRef}

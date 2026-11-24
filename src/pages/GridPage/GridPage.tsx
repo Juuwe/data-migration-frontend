@@ -1,5 +1,5 @@
-import { useEffect, type FC } from 'react'
-import { Alert } from 'react-bootstrap'
+import { useEffect, useState, type FC } from 'react'
+import { Alert, Button } from 'react-bootstrap'
 import { useSearchParams } from 'react-router-dom'
 
 import { MethodCard } from '../../components/MethodCard/MethodCard'
@@ -54,6 +54,7 @@ export const GridPage: FC = () => {
     (state) => state.methods.grid,
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
   const imageSearch = useServiceImageSearch(methods)
   const isImageSearchActive = Boolean(imageSearch.imageEmbedding)
   const visibleMethods = isImageSearchActive ? imageSearch.results : methods
@@ -88,6 +89,12 @@ export const GridPage: FC = () => {
     }
   }
 
+  // Одна кнопка «Найти» применяет и фильтр по времени, и поиск по фото (если выбрано).
+  const handleSubmit = () => {
+    handleSearch()
+    if (photoFile) imageSearch.searchByImage(photoFile)
+  }
+
   const handlePageChange = (nextPage: number) => {
     setSearchParams({
       min_time: formatTimeParam(filters.minTime),
@@ -115,7 +122,7 @@ export const GridPage: FC = () => {
           maxTime={filters.maxTime}
           setMinTime={(value) => dispatch(setMinTime(value))}
           setMaxTime={(value) => dispatch(setMaxTime(value))}
-          onSubmit={handleSearch}
+          onSubmit={handleSubmit}
           loading={loading}
         />
 
@@ -127,12 +134,16 @@ export const GridPage: FC = () => {
           topK={imageSearch.topK}
           resultCount={isImageSearchActive ? imageSearch.results.length : null}
           error={imageSearch.error}
-          onImage={imageSearch.searchByImage}
+          onFile={setPhotoFile}
           onReset={imageSearch.resetSearch}
           onThreshold={imageSearch.setThreshold}
           onTopK={imageSearch.setTopK}
         />
       </div>
+
+      <Button className="filter-submit grid-submit" type="button" onClick={handleSubmit} disabled={loading}>
+        Найти
+      </Button>
 
       <section className="cards-grid" aria-busy={loading}>
         {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}
