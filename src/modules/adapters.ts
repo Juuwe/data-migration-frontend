@@ -6,6 +6,7 @@ export const toMigrationMethod = (method: SerializerMigrationMethod): MigrationM
   id: method.id ?? 0,
   title: method.title ?? '',
   description: method.description ?? null,
+  description_en: method.description_en ?? null,
   image_url: method.image_url ?? '',
   video_url: method.video_url ?? '',
   created_by_current_user: method.created_by_current_user ?? false,

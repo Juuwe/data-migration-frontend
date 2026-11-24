@@ -4,6 +4,8 @@ export interface MigrationMethod {
   id: number
   title: string
   description: string | null
+  // Короткое английское описание из БД — по нему считается CLIP-эмбеддинг.
+  description_en?: string | null
   image_url: string
   video_url: string
   created_by_current_user: boolean

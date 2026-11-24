@@ -32,6 +32,7 @@ export interface SerializerDraftResponse {
 export interface SerializerFeedMethod {
   created_by_current_user?: boolean;
   description?: string;
+  description_en?: string;
   feed_position?: number;
   feed_size?: number;
   id?: number;
@@ -68,6 +69,7 @@ export interface SerializerMethodResponse {
 export interface SerializerMigrationMethod {
   created_by_current_user?: boolean;
   description?: string;
+  description_en?: string;
   id?: number;
   image_url?: string;
   likes_count?: number;

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import draftReducer from './slices/draftSlice'
 import methodsReducer from './slices/methodsSlice'
+import searchReducer from './slices/searchSlice'
 import userReducer from './slices/userSlice'
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     methods: methodsReducer,
     draft: draftReducer,
     user: userReducer,
+    search: searchReducer,
   },
   // Redux DevTools подключается автоматически в development-сборке.
 })
