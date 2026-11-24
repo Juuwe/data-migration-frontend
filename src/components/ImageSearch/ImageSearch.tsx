@@ -1,6 +1,17 @@
-import { useRef, type ChangeEvent, type FC } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent, type FC } from 'react'
+
+import { Button } from 'react-bootstrap'
 
 import './ImageSearch.css'
+
+const TRACK_OFFSET = 19
+const MIN_THRESHOLD = 0.4
+const MAX_THRESHOLD = 0.9
+
+const thresholdWidth = (value: number) =>
+  `calc((100% - ${TRACK_OFFSET * 2}px) * ${
+    (value - MIN_THRESHOLD) / (MAX_THRESHOLD - MIN_THRESHOLD)
+  })`
 
 interface Props {
   ready: boolean
@@ -30,13 +41,44 @@ export const ImageSearch: FC<Props> = ({
   onTopK,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
+  const [file, setFile] = useState<File | null>(null)
+  const [localUrl, setLocalUrl] = useState<string | null>(null)
+
+  useEffect(
+    () => () => {
+      if (localUrl) URL.revokeObjectURL(localUrl)
+    },
+    [localUrl],
+  )
 
   const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) onImage(file)
+    const next = event.target.files?.[0]
+    if (!next) return
+
+    setFile(next)
+    setLocalUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous)
+      return URL.createObjectURL(next)
+    })
   }
 
   const pickFile = () => inputRef.current?.click()
+
+  const handleSearch = () => {
+    if (file) onImage(file)
+  }
+
+  const handleReset = () => {
+    setFile(null)
+    setLocalUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous)
+      return null
+    })
+    if (inputRef.current) inputRef.current.value = ''
+    onReset()
+  }
+
+  const preview = localUrl ?? imageUrl
 
   return (
     <section className="control-card image-search" aria-label="Поиск услуг по изображению">
@@ -45,78 +87,90 @@ export const ImageSearch: FC<Props> = ({
           <i className="bi bi-camera" aria-hidden="true"></i>
           Поиск по фото
         </span>
-        {imageUrl ? (
-          <button type="button" className="image-search-reset" onClick={onReset}>
+        {preview ? (
+          <button type="button" className="image-search-reset" onClick={handleReset}>
             Сбросить
           </button>
         ) : null}
       </div>
 
-      <div className="image-search-body">
-        <button
-          type="button"
-          className="image-search-preview"
-          onClick={pickFile}
-          disabled={!ready}
-          aria-label="Загрузить изображение для поиска"
-        >
-          {imageUrl ? (
-            <img src={imageUrl} alt="Изображение для поиска" />
-          ) : (
-            <span className="image-search-preview-empty">
-              <i className="bi bi-image" aria-hidden="true"></i>
-              Фото
-            </span>
-          )}
-        </button>
+      <button
+        type="button"
+        className="image-search-dropzone"
+        onClick={pickFile}
+        disabled={!ready}
+        aria-label="Загрузить изображение для поиска"
+      >
+        {preview ? (
+          <img src={preview} alt="" />
+        ) : (
+          <>
+            <i className="bi bi-image" aria-hidden="true"></i>
+            {ready ? 'Загрузить изображение' : `Модель ${progress}%`}
+          </>
+        )}
+      </button>
 
-        <div className="image-search-controls">
-          <button
-            type="button"
-            className="image-search-upload"
-            disabled={!ready}
-            onClick={pickFile}
-          >
-            {ready ? 'Загрузить фото' : `Модель ${progress}%`}
-          </button>
-
-          <label>
+      <div className="image-search-controls">
+        <label className="image-search-control">
+          <span className="image-search-control-label">
             <span>Порог</span>
+            <strong>{threshold.toFixed(2)}</strong>
+          </span>
+          <div className="range-slider-container image-search-range">
+            <div className="range-track-bg"></div>
+            <div
+              className="range-track-active"
+              style={{ left: TRACK_OFFSET, width: thresholdWidth(threshold) }}
+              aria-hidden="true"
+            ></div>
             <input
               type="range"
-              min="0.4"
-              max="0.9"
+              min={MIN_THRESHOLD}
+              max={MAX_THRESHOLD}
               step="0.01"
               value={threshold}
+              className="range-input"
               onChange={(event) => onThreshold(Number(event.target.value))}
             />
-            <strong>{threshold.toFixed(2)}</strong>
-          </label>
+          </div>
+        </label>
 
-          <label>
+        <label className="image-search-control image-search-topk">
+          <span className="image-search-control-label">
             <span>TopK</span>
-            <input
-              type="number"
-              min="1"
-              max="20"
-              value={topK}
-              onChange={(event) => onTopK(Number(event.target.value))}
-            />
-          </label>
-
-          {resultCount !== null ? (
-            <p className="image-search-count">Найдено: {resultCount}</p>
-          ) : null}
-        </div>
-
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          className="image-search-input"
-          onChange={handleFile}
-        />
+          </span>
+          <input
+            type="number"
+            min="1"
+            max="20"
+            value={topK}
+            onChange={(event) => onTopK(Number(event.target.value))}
+          />
+        </label>
       </div>
+
+      <div className="image-search-actions">
+        <Button
+          className="filter-submit image-search-submit"
+          type="button"
+          onClick={handleSearch}
+          disabled={!ready || !file}
+        >
+          Найти
+        </Button>
+        {resultCount !== null ? (
+          <span className="image-search-count">Найдено: {resultCount}</span>
+        ) : null}
+      </div>
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="image-search-input"
+        onChange={handleFile}
+      />
 
       {!ready ? (
         <div className="image-search-progress" aria-label="Загрузка модели">
