@@ -50,11 +50,10 @@ export const GridPage: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useAppSelector((state) => state.methods.filters)
-  const { methods, loading, loaded, query, page, limit, total, error } = useAppSelector(
+  const { methods, loading, loaded, query, page, totalPages, error } = useAppSelector(
     (state) => state.methods.grid,
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
-  const totalPages = Math.max(1, Math.ceil(total / limit))
   const [isImageSearchOpen, setIsImageSearchOpen] = useState(false)
   const imageSearch = useServiceImageSearch(methods)
   const isImageSearchActive = Boolean(imageSearch.imageEmbedding)

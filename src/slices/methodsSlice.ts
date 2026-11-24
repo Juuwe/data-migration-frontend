@@ -23,6 +23,7 @@ interface MethodsState {
     page: number
     limit: number
     total: number
+    totalPages: number
     error: string | null
   }
   feed: {
@@ -46,6 +47,7 @@ const initialState: MethodsState = {
     page: 1,
     limit: 10,
     total: 0,
+    totalPages: 1,
     error: null,
   },
   feed: {
@@ -191,6 +193,7 @@ const methodsSlice = createSlice({
       state.grid.query = null
       state.grid.page = 1
       state.grid.total = 0
+      state.grid.totalPages = 1
       state.grid.error = null
     },
     invalidateGrid(state) {
@@ -219,6 +222,10 @@ const methodsSlice = createSlice({
         state.grid.page = action.payload.page
         state.grid.limit = action.payload.limit
         state.grid.total = action.payload.total
+        state.grid.totalPages = Math.max(
+          1,
+          Math.ceil(action.payload.total / action.payload.limit),
+        )
         state.filters = {
           minTime: action.payload.min_time,
           maxTime: action.payload.max_time,

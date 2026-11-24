@@ -144,8 +144,6 @@ Workflow `.github/workflows/deploy-pages.yml` собирает приложен�
 - для клиентских маршрутов создаётся `dist/404.html`;
 - `BrowserRouter` использует `basename` из `import.meta.env.BASE_URL`.
 
-Диаграмма развёртывания находится в `docs/deployment.puml`.
-
 ## Кодогенерация API
 
 ```bash
@@ -195,8 +193,6 @@ Redux DevTools подключается автоматически в режим
 ### Вход — `/login`
 
 Форма входа. Запрос идёт напрямую через axios. После успешного входа состояние пользователя записывается в Redux, в меню появляется «Выход».
-
-Диаграмма прецедентов интерфейса React находится в `docs/use-case-react.puml`.
 
 ## Mock-данные
 
