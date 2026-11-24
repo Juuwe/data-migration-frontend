@@ -50,7 +50,7 @@ export const GridPage: FC = () => {
   const dispatch = useAppDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const filters = useAppSelector((state) => state.methods.filters)
-  const { methods, loading, loaded, query, page, totalPages, error } = useAppSelector(
+  const { methods, loading, loaded, query, page, totalPages, total, error } = useAppSelector(
     (state) => state.methods.grid,
   )
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated)
@@ -133,7 +133,6 @@ export const GridPage: FC = () => {
             imageUrl={imageSearch.imageUrl}
             threshold={imageSearch.threshold}
             topK={imageSearch.topK}
-            resultCount={isImageSearchActive ? imageSearch.results.length : null}
             error={imageSearch.error}
             onFile={setPhotoFile}
             onReset={imageSearch.resetSearch}
@@ -147,7 +146,11 @@ export const GridPage: FC = () => {
             <span className="search-results-note">
               Похожих услуг по фото: {imageSearch.results.length}
             </span>
-          ) : null}
+          ) : (
+            <span className="search-results-note search-results-note--muted">
+              Всего услуг: {total.toLocaleString('ru-RU')}
+            </span>
+          )}
           <Button className="filter-submit" type="button" onClick={handleSubmit} disabled={loading}>
             Найти
           </Button>

@@ -1,5 +1,28 @@
-.image-search {
-  gap: 10px;
+.search-panel .image-search {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-panel .image-search .search-section-head {
+  justify-content: flex-start;
+}
+
+.search-panel .image-search .image-search-reset {
+  margin-left: auto;
+}
+
+@media (min-width: 700px) {
+  .search-panel .image-search {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 10px 20px;
+    align-items: end;
+  }
+
+  .search-panel .image-search .search-section-head {
+    grid-column: 1 / -1;
+  }
 }
 
 .image-search-input {
@@ -12,14 +35,14 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 56px;
+  height: 48px;
   padding: 0;
   overflow: hidden;
   color: #1f5f99;
   background: #eaf5ff;
   border: 1.5px dashed rgba(42, 159, 255, 0.55);
   border-radius: 12px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -44,43 +67,44 @@
   object-fit: cover;
 }
 
-.image-search-controls {
+.image-search-params {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 64px;
-  gap: 10px;
-  align-items: end;
+  gap: 12px;
+  align-items: start;
 }
 
-.image-search-control {
+.image-search-param {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   min-width: 0;
   color: #31445c;
   font-size: 11px;
   font-weight: 600;
 }
 
-.image-search-control-label {
+.image-search-param-label {
   display: flex;
   gap: 8px;
   align-items: center;
   justify-content: space-between;
+  min-width: 0;
 }
 
-.image-search-control-label strong {
+.image-search-param-label strong {
   color: #000000;
   font-size: 11px;
 }
 
 .image-search-range {
-  height: 32px;
+  height: 30px;
   padding: 0 12px;
 }
 
 .image-search-topk input {
   width: 100%;
-  height: 32px;
+  height: 30px;
   padding: 0 6px;
   color: #000000;
   background: #ffffff;
@@ -92,13 +116,6 @@
   text-align: center;
 }
 
-.image-search-count {
-  margin: 0;
-  color: #1f6f43;
-  font-size: 11px;
-  font-weight: 700;
-}
-
 .image-search-reset {
   padding: 0;
   color: #1f5f99;
@@ -108,20 +125,6 @@
   font-weight: 700;
   text-decoration: underline;
   cursor: pointer;
-}
-
-.image-search-progress {
-  height: 4px;
-  overflow: hidden;
-  background: #edf2f8;
-  border-radius: 999px;
-}
-
-.image-search-progress span {
-  display: block;
-  height: 100%;
-  background: #2a9fff;
-  transition: width 0.2s ease;
 }
 
 .image-search-error {

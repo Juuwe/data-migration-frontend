@@ -17,7 +17,6 @@ interface Props {
   imageUrl: string | null
   threshold: number
   topK: number
-  resultCount: number | null
   error: string | null
   onFile: (file: File | null) => void
   onReset: () => void
@@ -31,7 +30,6 @@ export const ImageSearch: FC<Props> = ({
   imageUrl,
   threshold,
   topK,
-  resultCount,
   error,
   onFile,
   onReset,
@@ -77,8 +75,8 @@ export const ImageSearch: FC<Props> = ({
 
   return (
     <section className="search-section image-search" aria-label="Поиск услуг по изображению">
-      <div className="control-card-head">
-        <span className="control-card-title">
+      <div className="search-section-head">
+        <span className="search-section-title">
           <i className="bi bi-camera" aria-hidden="true"></i>
           Поиск по фото
         </span>
@@ -106,10 +104,10 @@ export const ImageSearch: FC<Props> = ({
         )}
       </button>
 
-      <div className="image-search-controls">
-        <label className="image-search-control">
-          <span className="image-search-control-label">
-            <span>Порог</span>
+      <div className="image-search-params">
+        <label className="image-search-param">
+          <span className="image-search-param-label">
+            <span>Порог сходства</span>
             <strong>{threshold.toFixed(2)}</strong>
           </span>
           <div className="range-slider-container image-search-range">
@@ -131,10 +129,8 @@ export const ImageSearch: FC<Props> = ({
           </div>
         </label>
 
-        <label className="image-search-control image-search-topk">
-          <span className="image-search-control-label">
-            <span>TopK</span>
-          </span>
+        <label className="image-search-param image-search-topk">
+          <span className="image-search-param-label">TopK</span>
           <input
             type="number"
             min="1"
@@ -145,10 +141,6 @@ export const ImageSearch: FC<Props> = ({
         </label>
       </div>
 
-      {resultCount !== null ? (
-        <p className="image-search-count">Найдено: {resultCount}</p>
-      ) : null}
-
       <input
         ref={inputRef}
         type="file"
@@ -156,12 +148,6 @@ export const ImageSearch: FC<Props> = ({
         className="image-search-input"
         onChange={handleFile}
       />
-
-      {!ready ? (
-        <div className="image-search-progress" aria-label="Загрузка модели">
-          <span style={{ width: `${progress}%` }} />
-        </div>
-      ) : null}
 
       {error ? <p className="image-search-error">{error}</p> : null}
     </section>

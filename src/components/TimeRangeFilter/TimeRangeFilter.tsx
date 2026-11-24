@@ -14,7 +14,7 @@ interface Props {
   loading?: boolean
 }
 
-const formatNumber = (value: number) => Number.parseFloat(value.toFixed(2)).toString()
+const formatNumber = (value: number) => value.toFixed(2)
 
 const trackPosition = (value: number) =>
   `calc(${TRACK_OFFSET}px + (100% - ${TRACK_OFFSET * 2}px) * ${(value - SLIDER_MIN) / (SLIDER_MAX - SLIDER_MIN)})`
@@ -29,15 +29,15 @@ export const TimeRangeFilter: FC<Props> = ({
 }) => (
   <form
     id="filter-form"
-    className="search-section filter-section-card"
+    className="search-section"
     onSubmit={(event) => {
       event.preventDefault()
       if (!loading) onSubmit()
     }}
   >
-    <div className="control-card-head">
-      <span className="control-card-title">Время за ГБ</span>
-      <span className="filter-value">
+    <div className="search-section-head">
+      <span className="search-section-title">Время за ГБ</span>
+      <span className="search-section-value">
         {formatNumber(minTime)} — {formatNumber(maxTime)} сек/ГБ
       </span>
     </div>
@@ -74,11 +74,6 @@ export const TimeRangeFilter: FC<Props> = ({
         disabled={loading}
         onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
       />
-    </div>
-
-    <div className="range-scale" aria-hidden="true">
-      <span>{formatNumber(SLIDER_MIN)}</span>
-      <span>{formatNumber(SLIDER_MAX)}</span>
     </div>
   </form>
 )
