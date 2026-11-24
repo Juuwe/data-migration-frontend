@@ -116,34 +116,43 @@ export const GridPage: FC = () => {
 
   return (
     <div className="grid-page">
-      <div className="grid-controls">
-        <TimeRangeFilter
-          minTime={filters.minTime}
-          maxTime={filters.maxTime}
-          setMinTime={(value) => dispatch(setMinTime(value))}
-          setMaxTime={(value) => dispatch(setMaxTime(value))}
-          onSubmit={handleSubmit}
-          loading={loading}
-        />
+      <div className="control-card search-panel">
+        <div className="search-panel-grid">
+          <TimeRangeFilter
+            minTime={filters.minTime}
+            maxTime={filters.maxTime}
+            setMinTime={(value) => dispatch(setMinTime(value))}
+            setMaxTime={(value) => dispatch(setMaxTime(value))}
+            onSubmit={handleSubmit}
+            loading={loading}
+          />
 
-        <ImageSearch
-          ready={imageSearch.ready}
-          progress={imageSearch.progress}
-          imageUrl={imageSearch.imageUrl}
-          threshold={imageSearch.threshold}
-          topK={imageSearch.topK}
-          resultCount={isImageSearchActive ? imageSearch.results.length : null}
-          error={imageSearch.error}
-          onFile={setPhotoFile}
-          onReset={imageSearch.resetSearch}
-          onThreshold={imageSearch.setThreshold}
-          onTopK={imageSearch.setTopK}
-        />
+          <ImageSearch
+            ready={imageSearch.ready}
+            progress={imageSearch.progress}
+            imageUrl={imageSearch.imageUrl}
+            threshold={imageSearch.threshold}
+            topK={imageSearch.topK}
+            resultCount={isImageSearchActive ? imageSearch.results.length : null}
+            error={imageSearch.error}
+            onFile={setPhotoFile}
+            onReset={imageSearch.resetSearch}
+            onThreshold={imageSearch.setThreshold}
+            onTopK={imageSearch.setTopK}
+          />
+        </div>
+
+        <div className="search-panel-footer">
+          {isImageSearchActive ? (
+            <span className="search-results-note">
+              Похожих услуг по фото: {imageSearch.results.length}
+            </span>
+          ) : null}
+          <Button className="filter-submit" type="button" onClick={handleSubmit} disabled={loading}>
+            Найти
+          </Button>
+        </div>
       </div>
-
-      <Button className="filter-submit grid-submit" type="button" onClick={handleSubmit} disabled={loading}>
-        Найти
-      </Button>
 
       <section className="cards-grid" aria-busy={loading}>
         {error && !loading ? <Alert variant="danger" className="grid-alert">{error}</Alert> : null}

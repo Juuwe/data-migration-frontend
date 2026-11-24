@@ -11,16 +11,27 @@
   padding: calc(16px + var(--safe-top)) 16px calc(129px + var(--safe-bottom));
 }
 
-.grid-controls {
-  display: grid;
+.search-panel {
   flex: 0 0 auto;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
-.grid-submit {
-  flex: 0 0 auto;
-  width: 100%;
+.search-panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.search-panel-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.search-results-note {
+  color: #1f6f43;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .cards-grid {
@@ -57,9 +68,8 @@
     padding: calc(20px + var(--safe-top)) 20px calc(129px + var(--safe-bottom));
   }
 
-  .grid-controls {
+  .search-panel-grid {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 12px;
   }
 
   .cards-grid {

@@ -76,7 +76,7 @@ export const ImageSearch: FC<Props> = ({
   const preview = localUrl ?? imageUrl
 
   return (
-    <section className="control-card image-search" aria-label="Поиск услуг по изображению">
+    <section className="search-section image-search" aria-label="Поиск услуг по изображению">
       <div className="control-card-head">
         <span className="control-card-title">
           <i className="bi bi-camera" aria-hidden="true"></i>
@@ -101,7 +101,7 @@ export const ImageSearch: FC<Props> = ({
         ) : (
           <>
             <i className="bi bi-image" aria-hidden="true"></i>
-            {ready ? 'Загрузить изображение' : `Модель ${progress}%`}
+            {ready ? 'Загрузить фото' : `Загрузка модели ${progress}%`}
           </>
         )}
       </button>

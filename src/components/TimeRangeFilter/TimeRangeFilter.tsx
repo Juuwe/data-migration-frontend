@@ -29,16 +29,16 @@ export const TimeRangeFilter: FC<Props> = ({
 }) => (
   <form
     id="filter-form"
-    className="control-card filter-card"
+    className="search-section filter-section-card"
     onSubmit={(event) => {
       event.preventDefault()
       if (!loading) onSubmit()
     }}
   >
     <div className="control-card-head">
-      <span className="control-card-title">Время за Гб (сек)</span>
+      <span className="control-card-title">Время за ГБ</span>
       <span className="filter-value">
-        {formatNumber(minTime)} — {formatNumber(maxTime)} сек/Гб
+        {formatNumber(minTime)} — {formatNumber(maxTime)} сек/ГБ
       </span>
     </div>
 
@@ -74,6 +74,11 @@ export const TimeRangeFilter: FC<Props> = ({
         disabled={loading}
         onChange={(event) => setMaxTime(Math.max(Number(event.target.value), minTime + MIN_GAP))}
       />
+    </div>
+
+    <div className="range-scale" aria-hidden="true">
+      <span>{formatNumber(SLIDER_MIN)}</span>
+      <span>{formatNumber(SLIDER_MAX)}</span>
     </div>
   </form>
 )
