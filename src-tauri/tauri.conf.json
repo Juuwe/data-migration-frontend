@@ -22,7 +22,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; img-src 'self' http://172.20.10.2:9010 data: blob:; media-src 'self' http://172.20.10.2:9010 data: blob:; connect-src 'self' ipc: http://ipc.localhost http://172.20.10.2:8081 http://172.20.10.2:9010 https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net data: blob:; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://cdn.jsdelivr.net blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:;"
+      "csp": "default-src 'self'; img-src 'self' http://172.16.238.23:9010 data: blob:; media-src 'self' http://172.16.238.23:9010 data: blob:; connect-src 'self' ipc: http://ipc.localhost http://172.16.238.23:8081 http://172.16.238.23:9010 https://huggingface.co https://*.huggingface.co https://*.hf.co https://cdn.jsdelivr.net data: blob:; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval' https://cdn.jsdelivr.net blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; worker-src 'self' blob:;"
     }
   },
   "bundle": {
