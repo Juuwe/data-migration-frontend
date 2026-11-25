@@ -1,0 +1,397 @@
+/* Раскладка нативного приложения (окно Tauri). Цвета, скругления и тени — из темы веб-версии. */
+
+/* Отменяем «телефонную» центровку из index.css: страница занимает всё окно и прокручивается целиком */
+body:has(.native) {
+  display: block;
+  padding: 0;
+  background: #f6f8fb;
+}
+
+body:has(.native) #root {
+  display: block;
+}
+
+.native {
+  --grid-columns: 3;
+  --bs-primary: #2a9fff;
+  --bs-primary-rgb: 42, 159, 255;
+
+  min-height: 100dvh;
+  color: #20252b;
+}
+
+.native .btn-primary,
+.native .btn-outline-primary {
+  --bs-btn-border-color: #2a9fff;
+  --bs-btn-hover-bg: #1a7cd8;
+  --bs-btn-hover-border-color: #1a7cd8;
+  --bs-btn-active-bg: #1a7cd8;
+  --bs-btn-active-border-color: #1a7cd8;
+  --bs-btn-disabled-border-color: #2a9fff;
+  --bs-btn-border-radius: 10px;
+  font-weight: 600;
+}
+
+.native .btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-bg: #2a9fff;
+  --bs-btn-disabled-bg: #2a9fff;
+}
+
+.native .btn-outline-primary {
+  --bs-btn-color: #1f5f99;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-disabled-color: #1f5f99;
+}
+
+.native-content {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+  padding: 28px 32px 36px;
+}
+
+.native-header,
+.native-results {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.native-header {
+  margin-bottom: 20px;
+}
+
+.native-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Панели фильтра и поиска по изображению */
+.native-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.native-panel,
+.native-detail {
+  background: #fff;
+  border: 1px solid #e6ebf1;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(24, 39, 58, 0.06);
+}
+
+.native-panel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+.native-panel-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.native-panel-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+/* Фильтр веб-версии позиционирован абсолютно: внутри панели ставим кнопку справа от ползунка */
+.native-filter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+}
+
+.native-filter .filter-section {
+  display: contents;
+}
+
+.native-filter .filter-header {
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.native-filter .filter-label {
+  color: #20252b;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.native-filter .search-btn {
+  position: static;
+  width: auto;
+  height: 35px;
+  padding: 0 20px;
+}
+
+.native-file {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  color: #6c7a8d;
+  font-size: 14px;
+}
+
+.native-file img {
+  width: 44px;
+  height: 44px;
+  flex: none;
+  object-fit: cover;
+  border: 1px solid #c8d3e0;
+  border-radius: 10px;
+}
+
+.native-file span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.native-link {
+  flex: none;
+  padding: 0;
+  color: #1f5f99;
+  background: none;
+  border: 0;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.native-link:disabled {
+  opacity: 0.45;
+}
+
+.native-results {
+  margin-bottom: 12px;
+  color: #6c7a8d;
+  font-size: 14px;
+}
+
+.native-results h2 {
+  color: #20252b;
+}
+
+/* Плитка */
+.native-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: 16px;
+}
+
+.native-grid .card-media,
+.native-grid .skeleton-card-media {
+  display: block;
+  height: auto;
+  aspect-ratio: 1 / 0.9;
+}
+
+.native-grid .card-img {
+  display: block;
+}
+
+.native-grid .service-card {
+  padding: 8px;
+}
+
+.native-grid .card-title {
+  margin: 10px 4px 8px;
+  font-size: 18px;
+  line-height: 23px;
+}
+
+.native-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 4px;
+}
+
+.native-card-meta .card-time {
+  flex: 0 1 auto;
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+.native-likes {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #6c7a8d;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.native-card-more {
+  align-self: flex-start;
+  margin: 10px 4px 4px;
+  color: #1f5f99;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.native-empty {
+  grid-column: 1 / -1;
+  padding: 36px 18px;
+  margin: 0;
+  color: #6c7a8d;
+  text-align: center;
+}
+
+.native .pagination-bar {
+  position: static;
+  height: auto;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.native .pagination-bar .page-link {
+  min-width: 36px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.native .pagination-bar .page-item.active .page-link {
+  color: #fff;
+}
+
+/* Страница «Подробнее» */
+.native-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  color: #6c7a8d;
+  font-size: 14px;
+}
+
+.native-spinner {
+  display: grid;
+  place-items: center;
+  padding: 36px 0;
+}
+
+.native-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  align-items: start;
+  gap: 28px;
+  padding: 20px;
+}
+
+.native-detail > img,
+.native-detail > video,
+.native-detail-poster {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 0.9;
+  object-fit: cover;
+  background: #e9eef4;
+  border-radius: 12px;
+}
+
+.native-detail > video {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.native-detail-poster {
+  display: none;
+}
+
+.native-detail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.native-detail h1 {
+  margin: 0 0 12px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.native-properties {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.native-properties > div {
+  padding: 10px 14px;
+  color: #35627f;
+  background: #edf7ff;
+  border: 1px solid #d9eeff;
+  border-radius: 12px;
+}
+
+.native-properties dt {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.native-properties dd {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.native-description-en {
+  color: #6c7a8d;
+  font-style: italic;
+}
+
+/* Адаптивность окна: 3 колонки карточек, 2 — до 900px, 1 — до 560px */
+@media (max-width: 900px) {
+  .native {
+    --grid-columns: 2;
+  }
+
+  .native-panels,
+  .native-detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .native {
+    --grid-columns: 1;
+  }
+
+  .native-content {
+    padding: 20px 16px;
+  }
+}
+
+/* Подпись зафиксированных параметров поиска и процент сходства на карточке */
+.native-hint {
+  margin: 0;
+  color: #6c7a8d;
+  font-size: 13px;
+}
+
+.native-score {
+  padding: 2px 8px;
+  color: #ffffff;
+  background: rgba(31, 111, 67, 0.9);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

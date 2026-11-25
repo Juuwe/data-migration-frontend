@@ -14,8 +14,8 @@
     "windows": [
       {
         "title": "Миграция данных",
-        "width": 430,
-        "height": 900,
+        "width": 1000,
+        "height": 800,
         "minWidth": 360,
         "minHeight": 640,
         "resizable": true

@@ -10,7 +10,6 @@ import { TimeRangeFilter } from '../../components/TimeRangeFilter/TimeRangeFilte
 import { formatTimeParam, MIN_GAP, SLIDER_MAX, SLIDER_MIN } from '../../modules/filters'
 import { useServiceImageSearch } from '../../hooks/useServiceImageSearch'
 import { useAppDispatch, useAppSelector } from '../../modules/hooks'
-import { IS_TAURI } from '../../modules/tauriConfig'
 import { DEFAULT_MAX_TIME, DEFAULT_MIN_TIME } from '../../modules/mock'
 import {
   deleteMethod,
@@ -117,15 +116,6 @@ export const GridPage: FC = () => {
 
   return (
     <div className="grid-page">
-      {IS_TAURI ? (
-        <header className="page-head">
-          <h1 className="page-title">Список методов миграции</h1>
-          <p className="page-subtitle">
-            Отфильтруйте услуги по времени переноса или найдите похожие по фотографии.
-          </p>
-        </header>
-      ) : null}
-
       <div className="control-card search-panel">
         <div className="search-panel-grid">
           <TimeRangeFilter
