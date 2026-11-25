@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+﻿import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { Alert, Button, ProgressBar } from 'react-bootstrap'
 
 import { Pagination } from '../components/Pagination/Pagination'
@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../modules/hooks'
 import { getMethods, setCurrentPage, setFilters } from '../slices/methodsSlice'
 import { NativeMethodCard } from './NativeMethodCard'
 
-// Страница «Список услуг»: фильтр и пагинация выполняются на бэкенде,
+// Страница «Список методов миграции»: фильтр и пагинация выполняются на бэкенде,
 // поиск по изображению — среди карточек текущей страницы
 export const NativeListPage = () => {
   const dispatch = useAppDispatch()
@@ -89,7 +89,7 @@ export const NativeListPage = () => {
   return (
     <section className="native-content">
       <header className="native-header">
-        <h1>Список услуг</h1>
+        <h1>Список методов миграции</h1>
         <Button
           variant="outline-primary"
           size="sm"
@@ -158,7 +158,7 @@ export const NativeListPage = () => {
       {error ? <Alert variant="danger">{error}</Alert> : null}
 
       <div className="native-results">
-        <h2 className="native-panel-title">{isSearching ? 'Результаты поиска' : 'Каталог услуг'}</h2>
+        <h2 className="native-panel-title">{isSearching ? 'Результаты поиска' : 'Каталог методов миграции'}</h2>
         {isSearching ? (
           <button type="button" className="native-link" onClick={clearFile}>
             Весь каталог
@@ -186,8 +186,8 @@ export const NativeListPage = () => {
         ) : !error ? (
           <p className="native-empty">
             {isSearching
-              ? 'Похожих услуг на этой странице не найдено.'
-              : 'Услуги миграции не найдены'}
+              ? 'Похожих методов миграции на этой странице не найдено.'
+              : 'Методы миграции не найдены'}
           </p>
         ) : null}
       </div>

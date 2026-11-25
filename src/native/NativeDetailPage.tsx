@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Alert, Spinner } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 
@@ -15,7 +15,7 @@ export const NativeDetailPage = () => {
   const [requestError, setRequestError] = useState('')
   const methodId = Number(id)
   const isValidId = Number.isInteger(methodId) && methodId > 0
-  const error = isValidId ? requestError : 'Некорректный id услуги'
+  const error = isValidId ? requestError : 'Некорректный id метода миграции'
 
   useEffect(() => {
     if (!isValidId) return
@@ -27,10 +27,10 @@ export const NativeDetailPage = () => {
       .then((response) => {
         if (!actual) return
         if (response.data.method) setMethod(toFeedMethod(response.data.method))
-        else setRequestError('Услуга не найдена')
+        else setRequestError('Метод миграции не найден')
       })
       .catch((e) => {
-        if (actual) setRequestError(getRequestErrorMessage(e, 'Не удалось загрузить услугу'))
+        if (actual) setRequestError(getRequestErrorMessage(e, 'Не удалось загрузить метод миграции'))
       })
 
     return () => {
