@@ -293,24 +293,13 @@ body:has(.native) #root {
   padding: 20px;
 }
 
-.native-detail > img,
-.native-detail > video,
-.native-detail-poster {
+.native-detail > video {
   display: block;
   width: 100%;
   aspect-ratio: 1 / 0.9;
   object-fit: cover;
   background: #e9eef4;
   border-radius: 12px;
-}
-
-.native-detail > video {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.native-detail-poster {
-  display: none;
 }
 
 .native-detail-head {

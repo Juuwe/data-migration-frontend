@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom'
 import { api } from '../api'
 import { toFeedMethod } from '../modules/adapters'
 import { getRequestErrorMessage } from '../modules/apiError'
-import { DEFAULT_IMAGE, DEFAULT_VIDEO, resolveImageUrl, resolveVideoUrl } from '../modules/media'
+import { DEFAULT_VIDEO, resolveImageUrl, resolveVideoUrl } from '../modules/media'
 import type { FeedMethod } from '../modules/types'
 
 // Страница «Подробнее»: изображение, описание и параметры одной услуги
@@ -68,15 +68,6 @@ export const NativeDetailPage = () => {
             onError={(event) => {
               event.currentTarget.onerror = null
               event.currentTarget.src = DEFAULT_VIDEO
-            }}
-          />
-          <img
-            className="native-detail-poster"
-            src={resolveImageUrl(method.image_url)}
-            alt={method.title}
-            onError={(event) => {
-              event.currentTarget.onerror = null
-              event.currentTarget.src = DEFAULT_IMAGE
             }}
           />
           <div>

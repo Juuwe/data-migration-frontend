@@ -4,6 +4,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const isGitHubPages = process.env.GITHUB_PAGES === 'true'
 const base = isGitHubPages ? '/data-migration-frontend/' : '/'
+// В нативной сборке service worker не нужен: он кэширует старый бандл,
+// из-за чего после пересборки WebView показывает устаревший интерфейс.
+const isTauriBuild = process.env.npm_lifecycle_event === 'build:tauri'
 const apiTarget = process.env.API_PROXY_TARGET ?? 'http://localhost:8081'
 const s3Target = process.env.S3_PROXY_TARGET ?? 'http://localhost:9010'
 
@@ -30,7 +33,10 @@ export default defineConfig({
   },
   plugins: [
     react(),
-    VitePWA({
+    ...(isTauriBuild
+      ? []
+      : [
+          VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg',
@@ -69,11 +75,12 @@ export default defineConfig({
           },
         ],
       },
-      workbox: {
-        navigateFallback: `${base}index.html`,
-        globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
-      },
-    }),
+        workbox: {
+          navigateFallback: `${base}index.html`,
+          globPatterns: ['**/*.{js,css,html,svg,png,ico,woff,woff2}'],
+          maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        },
+      }),
+    ]),
   ],
 })
