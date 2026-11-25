@@ -2,8 +2,8 @@
 // В Tauri нельзя использовать localhost: он указывает на само устройство,
 // поэтому бэкенд и MinIO должны быть доступны по IP компьютера в локальной сети.
 // Замените адрес на IP из вывода `ipconfig` / `hostname -I` перед сборкой.
-const TAURI_API_FALLBACK = 'http://192.168.1.96:8081'
-const TAURI_S3_FALLBACK = 'http://192.168.1.96:9010'
+const TAURI_API_FALLBACK = 'http://172.20.10.2:8081'
+const TAURI_S3_FALLBACK = 'http://172.20.10.2:9010'
 
 const windowWithTauri = window as typeof window & {
   __TAURI_INTERNALS__?: unknown

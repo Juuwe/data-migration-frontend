@@ -99,3 +99,61 @@
     padding-left: 24px;
   }
 }
+
+/* --- Классическая страница списка для нативного клиента (Tauri) --- */
+.site-mode .grid-page {
+  --grid-columns: 4;
+  --card-media-height: 220px;
+
+  position: static;
+  inset: auto;
+  display: block;
+  padding: 0;
+}
+
+.site-mode .page-head {
+  margin-bottom: 18px;
+}
+
+.site-mode .page-title {
+  color: #18273a;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.site-mode .page-subtitle {
+  margin-top: 6px;
+  color: #6b7c92;
+  font-size: 14px;
+}
+
+.site-mode .search-panel {
+  margin-bottom: 24px;
+  padding: 18px 20px;
+  border-radius: 16px;
+}
+
+.site-mode .search-panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  gap: 28px;
+  align-items: start;
+}
+
+.site-mode .search-panel-grid > * + * {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.site-mode .cards-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: 20px;
+  overflow: visible;
+}
+
+.site-mode .pagination-bar {
+  height: auto;
+  margin-top: 24px;
+}

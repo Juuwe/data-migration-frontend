@@ -49,6 +49,13 @@ export const FeedPage: FC = () => {
 
   return (
     <>
+      {IS_TAURI ? (
+        <Link to={ROUTES.GRID} className="detail-back">
+          <i className="bi bi-arrow-left" aria-hidden="true"></i>
+          К списку услуг
+        </Link>
+      ) : null}
+
       <div className="media-container">
         <video
           className="feed-video"
@@ -102,6 +109,13 @@ export const FeedPage: FC = () => {
               <i className={`bi ${method.is_liked ? 'bi-heart-fill' : 'bi-heart'} action-icon`}></i>
             </button>
             <span className="action-label">{method.likes_count}</span>
+          </div>
+        ) : null}
+
+        {IS_TAURI ? (
+          <div className="detail-likes" aria-label={`Лайков: ${method.likes_count}`}>
+            <i className="bi bi-heart-fill" aria-hidden="true"></i>
+            <span>{method.likes_count}</span>
           </div>
         ) : null}
 
