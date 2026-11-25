@@ -12,10 +12,9 @@ export interface SearchableMethod extends MigrationMethod {
   isVisible: boolean
 }
 
-// Порог подобран для SigLIP на наших данных: после нормализации (cos + 1) / 2
-// значению 0.55 соответствует косинус 0.10. Пары «картинка — описание» с
-// косинусом ниже 0.10 дают случайные совпадения, выше — уверенное сходство.
-// Поэтому 0.55 отсекает шум, но не отрезает визуально близкие карточки.
+// Порог 0.55 в диапазоне 0.4–0.9: оценка карточки — доля от лучшего
+// совпадения на странице. 0.55 значит «не хуже 55% лучшего результата»:
+// так шкала не зависит от абсолютных значений косинуса конкретной модели.
 export const SIMILARITY_THRESHOLD = 0.55
 
 // На странице каталога 10 карточек, TopK = 5 даёт компактную выдачу
@@ -64,13 +63,20 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
       return methods.map((method) => ({ ...method, score: 0, isVisible: true }))
     }
 
-    return methods
-      .map((method) => {
-        const cached = textEmbeddings[method.id]
-        // CLIP возвращает косинусную близость; приводим её к шкале 0..1,
-        // чтобы фиксированный порог 0.55 был осмысленным.
-        const rawScore = cached ? cosineSimilarity(imageEmbedding, cached.embedding) : -1
-        const score = (rawScore + 1) / 2
+    // Косинус считаем для всех карточек страницы, а в оценку переводим долю
+    // от лучшего совпадения: абсолютный косинус SigLIP не калиброван.
+    const scored = methods.map((method) => {
+      const cached = textEmbeddings[method.id]
+      const cosine = cached ? cosineSimilarity(imageEmbedding, cached.embedding) : 0
+      return { method, cosine: Math.max(0, cosine) }
+    })
+
+    const best = Math.max(...scored.map((item) => item.cosine), 0)
+    if (best <= 0) return []
+
+    return scored
+      .map(({ method, cosine }) => {
+        const score = cosine / best
         return { ...method, score, isVisible: score >= SIMILARITY_THRESHOLD }
       })
       .filter((method) => method.isVisible)
