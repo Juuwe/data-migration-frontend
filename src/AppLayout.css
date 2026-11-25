@@ -23,24 +23,3 @@
     box-shadow: 0 20px 55px rgba(24, 39, 58, 0.18), 0 4px 14px rgba(24, 39, 58, 0.08);
   }
 }
-
-/* --- Классический сайт для нативного клиента (Tauri) --- */
-.app-viewport.site-mode {
-  display: block;
-  width: 100%;
-  height: auto;
-  min-height: 100dvh;
-  max-height: none;
-  overflow: visible;
-  background-color: #f6f8fb;
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.site-mode .site-content {
-  width: 100%;
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px 24px 56px;
-}

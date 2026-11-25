@@ -8,6 +8,7 @@ import { IS_TAURI } from './modules/tauriConfig'
 import { ROUTES } from './Routes'
 import { getFeedMethod } from './slices/methodsSlice'
 import './AppLayout.css'
+import './styles/desktop-site.css'
 
 export const AppLayout: FC = () => {
   const location = useLocation()
