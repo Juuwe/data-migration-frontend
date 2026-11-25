@@ -110,6 +110,15 @@ body:has(.native) #root {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-content: start;
+  align-items: end;
+  gap: 12px;
+}
+
+.native-filter .filter-submit {
+  align-self: end;
+  height: 40px;
+  padding: 0 22px;
+  white-space: nowrap;
 }
 
 .native-filter .filter-section {

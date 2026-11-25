@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import { Alert, Button, ProgressBar } from 'react-bootstrap'
 
 import { Pagination } from '../components/Pagination/Pagination'
@@ -113,6 +113,14 @@ export const NativeListPage = () => {
             onSubmit={handleFilter}
             loading={busy}
           />
+          <Button
+            className="filter-submit"
+            type="button"
+            onClick={handleFilter}
+            disabled={busy}
+          >
+            Найти
+          </Button>
         </section>
 
         <section className="native-panel" aria-label="Поиск по изображению">
