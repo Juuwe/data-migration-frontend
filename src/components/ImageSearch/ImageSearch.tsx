@@ -2,15 +2,6 @@ import { useEffect, useRef, useState, type ChangeEvent, type FC } from 'react'
 
 import './ImageSearch.css'
 
-const TRACK_OFFSET = 19
-const MIN_THRESHOLD = 0.4
-const MAX_THRESHOLD = 0.9
-
-const thresholdWidth = (value: number) =>
-  `calc((100% - ${TRACK_OFFSET * 2}px) * ${
-    (value - MIN_THRESHOLD) / (MAX_THRESHOLD - MIN_THRESHOLD)
-  })`
-
 interface Props {
   ready: boolean
   progress: number
@@ -20,10 +11,10 @@ interface Props {
   error: string | null
   onFile: (file: File | null) => void
   onReset: () => void
-  onThreshold: (value: number) => void
-  onTopK: (value: number) => void
 }
 
+// Порог и TopK зафиксированы в коде (см. useServiceImageSearch),
+// поэтому в интерфейсе они только отображаются.
 export const ImageSearch: FC<Props> = ({
   ready,
   progress,
@@ -33,8 +24,6 @@ export const ImageSearch: FC<Props> = ({
   error,
   onFile,
   onReset,
-  onThreshold,
-  onTopK,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const previewUrlRef = useRef<string | null>(null)
@@ -61,10 +50,8 @@ export const ImageSearch: FC<Props> = ({
   const pickFile = () => inputRef.current?.click()
 
   const handleReset = () => {
-    if (previewUrlRef.current) {
-      URL.revokeObjectURL(previewUrlRef.current)
-      previewUrlRef.current = null
-    }
+    if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current)
+    previewUrlRef.current = null
     setLocalUrl(null)
     onFile(null)
     if (inputRef.current) inputRef.current.value = ''
@@ -105,40 +92,19 @@ export const ImageSearch: FC<Props> = ({
       </button>
 
       <div className="image-search-params">
-        <label className="image-search-param">
+        <div className="image-search-param">
           <span className="image-search-param-label">
             <span>Порог сходства</span>
             <strong>{threshold.toFixed(2)}</strong>
           </span>
-          <div className="range-slider-container image-search-range">
-            <div className="range-track-bg"></div>
-            <div
-              className="range-track-active"
-              style={{ left: TRACK_OFFSET, width: thresholdWidth(threshold) }}
-              aria-hidden="true"
-            ></div>
-            <input
-              type="range"
-              min={MIN_THRESHOLD}
-              max={MAX_THRESHOLD}
-              step="0.01"
-              value={threshold}
-              className="range-input"
-              onChange={(event) => onThreshold(Number(event.target.value))}
-            />
-          </div>
-        </label>
+        </div>
 
-        <label className="image-search-param image-search-topk">
-          <span className="image-search-param-label">TopK</span>
-          <input
-            type="number"
-            min="1"
-            max="20"
-            value={topK}
-            onChange={(event) => onTopK(Number(event.target.value))}
-          />
-        </label>
+        <div className="image-search-param image-search-topk">
+          <span className="image-search-param-label">
+            <span>TopK</span>
+            <strong>{topK}</strong>
+          </span>
+        </div>
       </div>
 
       <input

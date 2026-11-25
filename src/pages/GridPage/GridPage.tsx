@@ -136,8 +136,6 @@ export const GridPage: FC = () => {
             error={imageSearch.error}
             onFile={setPhotoFile}
             onReset={imageSearch.resetSearch}
-            onThreshold={imageSearch.setThreshold}
-            onTopK={imageSearch.setTopK}
           />
         </div>
 
@@ -174,7 +172,7 @@ export const GridPage: FC = () => {
         ) : (
           <p className="no-data">
             {isImageSearchActive
-              ? 'По изображению ничего не найдено. Уменьшите порог сходства.'
+              ? 'По изображению ничего не найдено. Попробуйте другое фото: порог сходства 0.55, TopK 5.'
               : 'Услуги миграции не найдены'}
           </p>
         )}

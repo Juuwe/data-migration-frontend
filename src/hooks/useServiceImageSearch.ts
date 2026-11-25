@@ -12,11 +12,15 @@ export interface SearchableMethod extends MigrationMethod {
   isVisible: boolean
 }
 
-const DEFAULT_THRESHOLD = 0.4
-const DEFAULT_TOP_K = 5
-const MIN_THRESHOLD = 0.4
-const MAX_THRESHOLD = 0.9
-const MAX_TOP_K = 20
+// Порог подобран для SigLIP на наших данных: после нормализации (cos + 1) / 2
+// значению 0.55 соответствует косинус 0.10. Пары «картинка — описание» с
+// косинусом ниже 0.10 дают случайные совпадения, выше — уверенное сходство.
+// Поэтому 0.55 отсекает шум, но не отрезает визуально близкие карточки.
+export const SIMILARITY_THRESHOLD = 0.55
+
+// На странице каталога 10 карточек, TopK = 5 даёт компактную выдачу
+// (половину страницы) и не прячет релевантные результаты.
+export const MAX_RESULTS = 5
 
 export const useServiceImageSearch = (methods: MigrationMethod[]) => {
   const dispatch = useAppDispatch()
@@ -29,8 +33,6 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
   const [imageEmbedding, setImageEmbedding] = useState<number[] | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [imageError, setImageError] = useState<string | null>(null)
-  const [threshold, setThreshold] = useState(DEFAULT_THRESHOLD)
-  const [topK, setTopK] = useState(DEFAULT_TOP_K)
 
   // Описания берутся из БД (поле description_en), а не из словаря на фронте.
   const searchItems = useMemo(
@@ -66,15 +68,15 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
       .map((method) => {
         const cached = textEmbeddings[method.id]
         // CLIP возвращает косинусную близость; приводим её к шкале 0..1,
-        // чтобы рабочий диапазон порога 0.4–0.9 был осмысленным.
+        // чтобы фиксированный порог 0.55 был осмысленным.
         const rawScore = cached ? cosineSimilarity(imageEmbedding, cached.embedding) : -1
         const score = (rawScore + 1) / 2
-        return { ...method, score, isVisible: score >= threshold }
+        return { ...method, score, isVisible: score >= SIMILARITY_THRESHOLD }
       })
       .filter((method) => method.isVisible)
       .sort((left, right) => right.score - left.score)
-      .slice(0, topK)
-  }, [imageEmbedding, methods, textEmbeddings, threshold, topK])
+      .slice(0, MAX_RESULTS)
+  }, [imageEmbedding, methods, textEmbeddings])
 
   const searchByImage = async (file: File) => {
     setImageError(null)
@@ -100,14 +102,6 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
     })
   }
 
-  const updateThreshold = (value: number) => {
-    setThreshold(Math.min(MAX_THRESHOLD, Math.max(MIN_THRESHOLD, value)))
-  }
-
-  const updateTopK = (value: number) => {
-    setTopK(Math.min(MAX_TOP_K, Math.max(1, Math.round(value))))
-  }
-
   return {
     results,
     ready,
@@ -115,10 +109,8 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
     error: searchError ?? imageError,
     imageUrl,
     imageEmbedding,
-    threshold,
-    topK,
-    setThreshold: updateThreshold,
-    setTopK: updateTopK,
+    threshold: SIMILARITY_THRESHOLD,
+    topK: MAX_RESULTS,
     searchByImage,
     resetSearch,
   }
