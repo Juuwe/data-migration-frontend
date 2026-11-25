@@ -25,7 +25,17 @@ export const NativeMethodCard: FC<{ method: MigrationMethod; score?: number }> =
           }}
         />
       </Link>
-      <h3 className="card-title">{method.title}</h3>
+      <div className="native-card-head">
+        <h3 className="card-title">{method.title}</h3>
+        {score !== undefined ? (
+          <span
+            className="native-score"
+            aria-label={`Сходство с изображением: ${Math.round(score * 100)}%`}
+          >
+            {Math.round(score * 100)}%
+          </span>
+        ) : null}
+      </div>
       <div className="native-card-meta">
         <span className="card-time">
           <i className="bi bi-clock card-clock-icon" aria-hidden="true"></i>
@@ -35,11 +45,6 @@ export const NativeMethodCard: FC<{ method: MigrationMethod; score?: number }> =
           <i className="bi bi-heart-fill card-like-icon" aria-hidden="true"></i>
           {method.likes_count}
         </span>
-        {score !== undefined ? (
-          <span className="native-score" aria-label={`Сходство с изображением: ${Math.round(score * 100)}%`}>
-            {Math.round(score * 100)}%
-          </span>
-        ) : null}
       </div>
       <Link to={detailPath} className="native-card-more">
         Подробнее →
