@@ -34,6 +34,16 @@ export const NativeListPage = () => {
     if (!loaded) dispatch(getMethods())
   }, [dispatch, loaded])
 
+  // В WebView2 первый сетевой запрос после старта иногда не проходит:
+  // повторяем загрузку списка, пока она не удастся (не больше трёх раз).
+  const retriesRef = useRef(0)
+  useEffect(() => {
+    if (!error || retriesRef.current >= 3) return
+    retriesRef.current += 1
+    const timer = window.setTimeout(() => dispatch(getMethods()), 700 * retriesRef.current)
+    return () => window.clearTimeout(timer)
+  }, [dispatch, error])
+
   // Освобождаем ссылку на превью при замене файла и уходе со страницы
   useEffect(() => {
     if (!preview) return
