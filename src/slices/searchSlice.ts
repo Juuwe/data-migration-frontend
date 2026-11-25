@@ -9,7 +9,6 @@ export interface TextEmbedding {
 }
 
 interface SearchState {
-  // Кэш текстовых эмбеддингов: считается один раз и хранится в Redux.
   textEmbeddings: Record<number, TextEmbedding>
   loading: boolean
   progress: number
@@ -42,7 +41,6 @@ export const loadTextEmbeddings = createAsyncThunk<
     }
   },
   {
-    // Если тексты уже в Redux, повторно их не эмбеддим.
     condition: (items, { getState }) => {
       const cached = getState().search.textEmbeddings
       return items.some((item) => cached[item.id]?.description !== item.description)

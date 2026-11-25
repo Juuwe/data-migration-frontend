@@ -12,18 +12,12 @@ export interface SearchableMethod extends MigrationMethod {
   isVisible: boolean
 }
 
-// Порог 0.55 в диапазоне 0.4–0.9: оценка карточки — доля от лучшего
-// совпадения на странице. 0.55 значит «не хуже 55% лучшего результата»:
-// так шкала не зависит от абсолютных значений косинуса конкретной модели.
 export const SIMILARITY_THRESHOLD = 0.55
 
-// На странице каталога 10 карточек, TopK = 5 даёт компактную выдачу
-// (половину страницы) и не прячет релевантные результаты.
 export const MAX_RESULTS = 5
 
 export const useServiceImageSearch = (methods: MigrationMethod[]) => {
   const dispatch = useAppDispatch()
-  // Текстовые эмбеддинги живут в Redux и не пересчитываются повторно.
   const textEmbeddings = useAppSelector((state) => state.search.textEmbeddings)
   const loading = useAppSelector((state) => state.search.loading)
   const progress = useAppSelector((state) => state.search.progress)
@@ -33,7 +27,6 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [imageError, setImageError] = useState<string | null>(null)
 
-  // Описания берутся из БД (поле description_en), а не из словаря на фронте.
   const searchItems = useMemo(
     () =>
       methods.map((method) => ({
@@ -63,8 +56,6 @@ export const useServiceImageSearch = (methods: MigrationMethod[]) => {
       return methods.map((method) => ({ ...method, score: 0, isVisible: true }))
     }
 
-    // Косинус считаем для всех карточек страницы, а в оценку переводим долю
-    // от лучшего совпадения: абсолютный косинус SigLIP не калиброван.
     const scored = methods.map((method) => {
       const cached = textEmbeddings[method.id]
       const cosine = cached ? cosineSimilarity(imageEmbedding, cached.embedding) : 0

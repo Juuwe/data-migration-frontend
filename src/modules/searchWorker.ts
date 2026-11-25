@@ -1,5 +1,3 @@
-// Единственный worker на всё приложение: текстовая CLIP-модель и её эмбеддинги
-// должны загружаться один раз, а не при каждом запросе картинки.
 type TextRequest = {
   resolve: (embeddings: Record<number, number[]>) => void
   reject: (error: Error) => void
@@ -68,7 +66,6 @@ const getWorker = (): Worker => {
   return worker
 }
 
-// Текстовые эмбеддинги считаются только для тех описаний, которых ещё нет в Redux.
 export const requestTextEmbeddings = (
   items: SearchItem[],
   onProgress: (progress: number) => void,
@@ -78,7 +75,6 @@ export const requestTextEmbeddings = (
     getWorker().postMessage({ type: 'init', data: items })
   })
 
-// Эмбеддинг картинки считается заново на каждый запрос.
 export const requestImageEmbedding = (file: File): Promise<number[]> =>
   new Promise((resolve, reject) => {
     imageRequest = { resolve, reject }

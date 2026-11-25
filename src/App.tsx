@@ -12,7 +12,6 @@ import { NativeApp } from './native/NativeApp'
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 
 function App() {
-  // В окне Tauri — отдельная раскладка гостя, веб-версия и PWA не меняются
   if (IS_TAURI) return <NativeApp />
 
   return (

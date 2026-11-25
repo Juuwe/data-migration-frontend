@@ -8,7 +8,6 @@ import { getRequestErrorMessage } from '../modules/apiError'
 import { DEFAULT_VIDEO, resolveImageUrl, resolveVideoUrl } from '../modules/media'
 import type { FeedMethod } from '../modules/types'
 
-// Страница «Подробнее»: изображение, описание и параметры одной услуги
 export const NativeDetailPage = () => {
   const { id } = useParams()
   const [method, setMethod] = useState<FeedMethod | null>(null)
@@ -21,7 +20,6 @@ export const NativeDetailPage = () => {
     if (!isValidId) return
     let actual = true
 
-    // Отдельного метода «услуга по id» в API нет: лента с параметром id возвращает именно её
     api.api
       .methodsFeedList({ id: methodId })
       .then((response) => {

@@ -4,7 +4,6 @@ import { NativeDetailPage } from './NativeDetailPage'
 import { NativeListPage } from './NativeListPage'
 import './native.css'
 
-// Нативное приложение гостя: две страницы без нижней навигации — «Список услуг» и «Подробнее».
 export const NativeApp = () => (
   <BrowserRouter>
     <main className="native">

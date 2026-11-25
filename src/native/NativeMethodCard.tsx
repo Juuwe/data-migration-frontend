@@ -6,7 +6,6 @@ import { DEFAULT_IMAGE, resolveImageUrl } from '../modules/media'
 import type { MigrationMethod } from '../modules/types'
 import '../components/MethodCard/MethodCard.css'
 
-// Карточка услуги: изображение, название, время, лайки, процент сходства и ссылка «Подробнее»
 export const NativeMethodCard: FC<{ method: MigrationMethod; score?: number }> = ({
   method,
   score,

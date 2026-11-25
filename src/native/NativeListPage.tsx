@@ -9,15 +9,12 @@ import { useAppDispatch, useAppSelector } from '../modules/hooks'
 import { getMethods, setCurrentPage, setFilters } from '../slices/methodsSlice'
 import { NativeMethodCard } from './NativeMethodCard'
 
-// Страница «Список методов миграции»: фильтр и пагинация выполняются на бэкенде,
-// поиск по изображению — среди карточек текущей страницы
 export const NativeListPage = () => {
   const dispatch = useAppDispatch()
   const filters = useAppSelector((state) => state.methods.filters)
   const { methods, loading, loaded, page, total, totalPages, error } = useAppSelector(
     (state) => state.methods.grid,
   )
-  // Выбранные, но ещё не применённые границы; в Redux попадают по кнопке «Найти»
   const [draft, setDraft] = useState(filters)
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
@@ -29,13 +26,10 @@ export const NativeListPage = () => {
   const items = isSearching ? imageSearch.results : methods
   const busy = loading || searching
 
-  // При возврате со страницы «Подробнее» список берётся из Redux
   useEffect(() => {
     if (!loaded) dispatch(getMethods())
   }, [dispatch, loaded])
 
-  // В WebView2 первый сетевой запрос после старта иногда не проходит:
-  // повторяем загрузку списка, пока она не удастся (не больше трёх раз).
   const retriesRef = useRef(0)
   useEffect(() => {
     if (!error || retriesRef.current >= 3) return
@@ -44,13 +38,11 @@ export const NativeListPage = () => {
     return () => window.clearTimeout(timer)
   }, [dispatch, error])
 
-  // Освобождаем ссылку на превью при замене файла и уходе со страницы
   useEffect(() => {
     if (!preview) return
     return () => URL.revokeObjectURL(preview)
   }, [preview])
 
-  // Результат поиска относится к одной странице, поэтому при её смене сбрасывается вместе с файлом
   const clearFile = () => {
     setFile(null)
     setPreview(null)
